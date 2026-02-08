@@ -34,56 +34,93 @@
             <div class="container">
                 <div class="block-heading">
                     <h2 class="text-info">Projects</h2>
-                    <p>Selected engineering case studies spanning secure networking, streaming RTL analytics, and research-driven optimization.</p>
+                    <p>.</p>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-5 col-lg-4">
                         <div class="clean-pricing-item">
-                            <div class="heading">
-                                <h3>VLAN Switching on ARM Cortex‑R5</h3>
-                            </div>
-                            <p>Explored VLAN switching feasibility on Zynq platforms from simulation to hardware bring-up. Validated VLAN semantics in Packet Tracer/GNS3, then implemented DMA-driven Ethernet frame handling on Zybo Z7-20 with Wireshark verification. Measured ~3–4k frames/sec baseline and documented KR260 4-port constraints (MIO/EMIO split + PHY reset via I2C expander).</p>
-                            <div class="features">
-                                <h4><span class="feature"><br>Embedded C</span><span>&nbsp; &nbsp; &nbsp;&nbsp;</span></h4>
-                                <h4><span class="feature" style="padding-right: 0px;"><br>Ethernet packet parsing&nbsp;</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
-                                <h4><span class="feature"><br>Validation</span><span>&nbsp; &nbsp;</span></h4>
-                            </div>
-                            <div class="price">
-                                <h4>Details</h4>
-                            </div><button class="btn btn-outline-primary d-block w-100" type="button">click here</button>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-lg-4">
-                        <div class="clean-pricing-item">
                             <div class="ribbon"><span>Latest</span></div>
                             <div class="heading">
-                                <h3>Entropy‑Driven FPGA Security Monitoring</h3>
+                                <h3><br>VLAN Switching on ARM Cortex‑R5<br><br></h3>
                             </div>
-                            <p>Designed an AXI-Stream entropy-monitoring RTL core for traffic anomaly indicators. Streaming bucket counters + total count feed an integer entropy metric, exposed via AXI4-Lite registers. Validated handshake/backpressure behavior in simulation with pass/fail checks and trace logs; intended as a hardware assist for SDN/security pipelines.</p>
+                            <p class="text-start"><br>Designed and evaluated a <strong>Layer-2 VLAN switching pipeline</strong> on Zynq SoC platforms, progressing from <strong>network simulation</strong> to <strong>bare-metal hardware bring-up</strong>. The project focused on understanding <strong>practical limitations of PS-only Ethernet switching</strong>, DMA throughput, PHY control, and board-level constraints on commercial FPGA platforms.<br><br></p>
                             <div class="features">
-                                <h4><span class="feature"><br>RTL pipelines</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
-                                <h4><span class="feature"><br>AXI-Stream&nbsp;</span><span>&nbsp; &nbsp;</span></h4>
-                                <h4><span class="feature"><br>On-chip debug&nbsp;</span><span>&nbsp; &nbsp;</span></h4>
+                                <h4><span class="feature"><br><br>Embedded Networking</span><span>&nbsp; &nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature" style="padding-right: 0px;"><br>PGA SoC Integration</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature"><br>Hardware Foundations<br><br></span><span>&nbsp; &nbsp;</span></h4>
                             </div>
-                            <div class="price">
-                                <h4>Details</h4>
-                            </div><button class="btn btn-primary d-block w-100" type="button"><strong><span style="background-color: rgb(13, 110, 253);">click here</span></strong></button>
+                            <div class="price"></div><button class="btn btn-outline-primary d-block w-100" type="button"><strong>more details</strong></button>
                         </div>
                     </div>
                     <div class="col-md-5 col-lg-4">
                         <div class="clean-pricing-item">
                             <div class="heading">
-                                <h3>NoC Optimization for Chiplet SoCs (2025)</h3>
+                                <h3><br> Entropy-Driven FPGA Security Monitoring<br><br></h3>
                             </div>
-                            <p>Research project on deadlock-free NoC design for chiplet-scale interconnects. Studied turn-restriction frameworks and applied symmetry-based preprocessing (SBPA) and multi-objective optimization (e.g., NSGA-II) to map latency–bandwidth trade-offs and produce reproducible analysis artifacts.</p>
+                            <div class="ribbon"><span>Latest</span></div>
+                            <p class="text-start"><br>Developed <strong>RTL streaming pipelines</strong> to compute entropy-related metrics on live packet streams using <strong>AXI-Stream</strong>, enabling <strong>low-latency anomaly indicators</strong> directly in hardware. The design emphasizes protocol correctness, throughput safety, and observability.<br><br></p>
                             <div class="features">
-                                <h4><span class="feature"><br> Architectur</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
-                                <h4><span class="feature"><br>Optimization&nbsp;</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
-                                <h4><span class="feature"><br>Research reporting</span><span>&nbsp; &nbsp;</span></h4>
+                                <h4><span class="feature"><br>Streaming RTL</span><span>&nbsp; &nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature" style="padding-right: 0px;"><br>Hardware Security</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature"><br> FPGA Data Path Design<br><br></span><span>&nbsp; &nbsp;</span></h4>
                             </div>
-                            <div class="price">
-                                <h4>Details</h4>
-                            </div><button class="btn btn-outline-primary d-block w-100" type="button"><strong>click here</strong></button>
+                            <div class="price"></div><button class="btn btn-outline-primary d-block w-100" type="button"><strong>more details</strong></button>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-lg-4">
+                        <div class="clean-pricing-item">
+                            <div class="heading">
+                                <h3><br> Custom&nbsp;8-bit LFSR&nbsp;IP<br><br></h3>
+                            </div>
+                            <p class="text-start"><br>Designed a <strong>custom AXI4-Lite slave IP</strong> implementing an <strong>8-bit Linear Feedback Shift Register (LFSR)</strong> and integrated it into a Zynq SoC. The IP was controlled and validated via a <strong>bare-metal Embedded C application</strong>, demonstrating full RTL-to-software integration.<br><br></p>
+                            <div class="features">
+                                <h4><span class="feature"><br><br>SoC IP Design</span><span>&nbsp; &nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature" style="padding-right: 0px;"><br> AXI Protocol</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature"><br><strong> FPGA Control Plane Design</strong><br><br></span><span>&nbsp; &nbsp;</span></h4>
+                            </div>
+                            <div class="price"></div><button class="btn btn-outline-primary d-block w-100" type="button"><strong>more details</strong></button>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-lg-4">
+                        <div class="clean-pricing-item">
+                            <div class="heading">
+                                <h3><br> AXI Master Verification using UVM<br><br></h3>
+                            </div>
+                            <p class="text-start"><br>Built a <strong>UVM-based verification environment</strong> for an AXI master interface, focusing on <strong>protocol correctness</strong>, constrained-random stimulus, and functional coverage. This project demonstrates verification methodology beyond simulation-only RTL testing.<br><br></p>
+                            <div class="features">
+                                <h4><span class="feature"><br>RTL Verification</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature"><br> UVM</span><span>&nbsp; &nbsp;</span></h4>
+                                <h4><span class="feature"><br> Protocol Compliance</span><span>&nbsp;&nbsp;<br><br></span></h4>
+                            </div>
+                            <div class="price"></div><button class="btn btn-primary d-block w-100" type="button"><strong><span style="background-color: rgb(13, 110, 253);">more details</span></strong></button>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-lg-4">
+                        <div class="clean-pricing-item">
+                            <div class="heading">
+                                <h3><br> NoC Optimization for Chiplet-Based SoC<br><br></h3>
+                            </div>
+                            <p class="text-start"><br>Explored <strong>Network-on-Chip (NoC) architectures</strong> for chiplet-based SoCs using <strong>graph-theoretic optimization techniques</strong>. The work focused on balancing <strong>latency, bandwidth, and scalability</strong> under physical design constraints.<br><br></p>
+                            <div class="features">
+                                <h4><span class="feature"><br>VLSI Architecture</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature"><br>Interconnect Optimization</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature"><br>Research &amp; Algorithms<br><br></span><span>&nbsp; &nbsp;</span></h4>
+                            </div>
+                            <div class="price"></div><button class="btn btn-outline-primary d-block w-100" type="button"><strong>more details</strong></button>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-lg-4">
+                        <div class="clean-pricing-item">
+                            <div class="heading">
+                                <h3><br> Low-Power FIR Filter: FPGA vs ASIC<br><br></h3>
+                            </div>
+                            <p class="text-start"><br>Designed a <strong>12-tap FIR filter</strong> and compared its implementation across <strong>FPGA and ASIC flows</strong>, focusing on <strong>power, performance, and area (PPA)</strong> trade-offs. This project highlights architectural decision-making across platforms.<br><br></p>
+                            <div class="features">
+                                <h4><span class="feature"><br>Digital Signal Processing</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature"><br> Low-Power VLSI</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
+                                <h4><span class="feature"><br> FPGA vs ASIC Analysis</span><span>&nbsp;<br><br></span></h4>
+                            </div>
+                            <div class="price"></div><button class="btn btn-outline-primary d-block w-100" type="button"><strong>more details</strong></button>
                         </div>
                     </div>
                 </div>
