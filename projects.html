@@ -34,7 +34,7 @@
             <div class="container">
                 <div class="block-heading">
                     <h2 class="text-info">Projects</h2>
-                    <p>Developed real-time FPGA RTL to monitor entropy in packet streams via AXI-Stream for anomaly detection with low latency and hardware-level visibility.</p>
+                    <p>Selected engineering case studies spanning secure networking, streaming RTL analytics, and research-driven optimization.</p>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-5 col-lg-4">
@@ -42,7 +42,7 @@
                             <div class="heading">
                                 <h3>VLAN Switching on ARM Cortex‑R5</h3>
                             </div>
-                            <p>Designed a bare-metal VLAN-aware switching pipeline with packet classification, MAC learning/aging, and VLAN tag forwarding. Verified behavior and throughput using Wireshark packet captures.</p>
+                            <p>Explored VLAN switching feasibility on Zynq platforms from simulation to hardware bring-up. Validated VLAN semantics in Packet Tracer/GNS3, then implemented DMA-driven Ethernet frame handling on Zybo Z7-20 with Wireshark verification. Measured ~3–4k frames/sec baseline and documented KR260 4-port constraints (MIO/EMIO split + PHY reset via I2C expander).</p>
                             <div class="features">
                                 <h4><span class="feature"><br>Embedded C</span><span>&nbsp; &nbsp; &nbsp;&nbsp;</span></h4>
                                 <h4><span class="feature" style="padding-right: 0px;"><br>Ethernet packet parsing&nbsp;</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
@@ -59,7 +59,7 @@
                             <div class="heading">
                                 <h3>Entropy‑Driven FPGA Security Monitoring</h3>
                             </div>
-                            <p>Implemented RTL logic to compute entropy-related metrics on live packet streams through AXI-Stream interfaces, enabling low-latency anomaly detection in hardware.</p>
+                            <p>Designed an AXI-Stream entropy-monitoring RTL core for traffic anomaly indicators. Streaming bucket counters + total count feed an integer entropy metric, exposed via AXI4-Lite registers. Validated handshake/backpressure behavior in simulation with pass/fail checks and trace logs; intended as a hardware assist for SDN/security pipelines.</p>
                             <div class="features">
                                 <h4><span class="feature"><br>RTL pipelines</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
                                 <h4><span class="feature"><br>AXI-Stream&nbsp;</span><span>&nbsp; &nbsp;</span></h4>
@@ -75,7 +75,7 @@
                             <div class="heading">
                                 <h3>NoC Optimization for Chiplet SoCs (2025)</h3>
                             </div>
-                            <p>Analyzed deadlock-free NoC frameworks for chiplet interconnect. Applied multi-objective optimization (SBPA/NSGA-II) to explore latency vs bandwidth design trade-offs.</p>
+                            <p>Research project on deadlock-free NoC design for chiplet-scale interconnects. Studied turn-restriction frameworks and applied symmetry-based preprocessing (SBPA) and multi-objective optimization (e.g., NSGA-II) to map latency–bandwidth trade-offs and produce reproducible analysis artifacts.</p>
                             <div class="features">
                                 <h4><span class="feature"><br> Architectur</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
                                 <h4><span class="feature"><br>Optimization&nbsp;</span><span>&nbsp; &nbsp;&nbsp;</span></h4>
