@@ -7,7 +7,7 @@
   <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#0B1C2E">
-  <title>VASU — Value Asset Stewardship Utility</title>
+  <title>VASU — Value &amp; Asset Stewardship Utility</title>
   <style>
     html,body{margin:0;background:#0B1C2E;color:#F2EDE4;font-family:system-ui,sans-serif}
     #boot{min-height:100vh;display:grid;place-items:center}
@@ -39,6 +39,7 @@
     if(!('DecompressionStream' in window)) throw new Error('This browser needs DecompressionStream support.');
     const ds=new DecompressionStream('gzip');
     let html=await new Response(new Blob([bin]).stream().pipeThrough(ds)).text();
+    html=html.split('Value Asset Stewardship Utility').join('Value & Asset Stewardship Utility');
 
     const lr=await fetch(base+'logo.b64',{cache:'no-store'});
     if(lr.ok){
@@ -48,15 +49,16 @@
       html=html.replace('</head>',brand+'</head>');
     }
 
-    const [rr,hr,br]=await Promise.all([
+    const [rr,hr,br,pr]=await Promise.all([
       fetch(base+'vasu-v24-runtime.js',{cache:'no-store'}),
       fetch(base+'vasu-v24-import-hotfix.js',{cache:'no-store'}),
-      fetch(base+'vasu-v25-bulk-ui.js',{cache:'no-store'})
+      fetch(base+'vasu-v25-bulk-ui.js',{cache:'no-store'}),
+      fetch(base+'vasu-v26-polish.js',{cache:'no-store'})
     ]);
-    if(!rr.ok || !hr.ok || !br.ok){
-      throw new Error(`VASU runtime unavailable (central ${rr.status}, import ${hr.status}, bulk UI ${br.status})`);
+    if(!rr.ok || !hr.ok || !br.ok || !pr.ok){
+      throw new Error(`VASU runtime unavailable (central ${rr.status}, import ${hr.status}, bulk UI ${br.status}, polish ${pr.status})`);
     }
-    const patch=(await rr.text())+'\n'+(await hr.text())+'\n'+(await br.text());
+    const patch=(await rr.text())+'\n'+(await hr.text())+'\n'+(await br.text())+'\n'+(await pr.text());
     const marker='init().catch(e=>{console.error(e);alert(`Initialization failed: ${e.message}`)});';
     if(!html.includes(marker)) throw new Error('VASU runtime marker mismatch');
     html=html.replace(marker,patch+'\n'+marker);
