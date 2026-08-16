@@ -49,16 +49,17 @@
       html=html.replace('</head>',brand+'</head>');
     }
 
-    const [rr,hr,br,pr]=await Promise.all([
+    const [rr,hr,br,pr,nr]=await Promise.all([
       fetch(base+'vasu-v24-runtime.js',{cache:'no-store'}),
       fetch(base+'vasu-v24-import-hotfix.js',{cache:'no-store'}),
       fetch(base+'vasu-v25-bulk-ui.js',{cache:'no-store'}),
-      fetch(base+'vasu-v26-polish.js',{cache:'no-store'})
+      fetch(base+'vasu-v26-polish.js',{cache:'no-store'}),
+      fetch(base+'vasu-v27-navigation.js',{cache:'no-store'})
     ]);
-    if(!rr.ok || !hr.ok || !br.ok || !pr.ok){
-      throw new Error(`VASU runtime unavailable (central ${rr.status}, import ${hr.status}, bulk UI ${br.status}, polish ${pr.status})`);
+    if(!rr.ok || !hr.ok || !br.ok || !pr.ok || !nr.ok){
+      throw new Error(`VASU runtime unavailable (central ${rr.status}, import ${hr.status}, bulk UI ${br.status}, polish ${pr.status}, navigation ${nr.status})`);
     }
-    const patch=(await rr.text())+'\n'+(await hr.text())+'\n'+(await br.text())+'\n'+(await pr.text());
+    const patch=(await rr.text())+'\n'+(await hr.text())+'\n'+(await br.text())+'\n'+(await pr.text())+'\n'+(await nr.text());
     const marker='init().catch(e=>{console.error(e);alert(`Initialization failed: ${e.message}`)});';
     if(!html.includes(marker)) throw new Error('VASU runtime marker mismatch');
     html=html.replace(marker,patch+'\n'+marker);
