@@ -80,14 +80,17 @@
       fetch(base+'vasu-v26-polish.js',{cache:'no-store'}),
       fetch(base+'vasu-v27-navigation.js',{cache:'no-store'}),
       fetch(base+'vasu-v28-qa.b64',{cache:'no-store'}),
-      fetch(base+'vasu-v29-suite.b64',{cache:'no-store'})
+      Promise.all([1,2,3,4,5,6].map(i=>fetch(base+'29/'+String(i).padStart(2,'0')+'.txt',{cache:'no-store'})))
     ]);
     setProgress(84);
-    if(!rr.ok || !hr.ok || !br.ok || !pr.ok || !nr.ok || !qr.ok || !sr.ok){
-      throw new Error(`VASU runtime unavailable (central ${rr.status}, import ${hr.status}, bulk ${br.status}, polish ${pr.status}, navigation ${nr.status}, QA ${qr.status}, suite ${sr.status})`);
+    const suiteOk=Array.isArray(sr)&&sr.every(r=>r.ok);
+    if(!rr.ok || !hr.ok || !br.ok || !pr.ok || !nr.ok || !qr.ok || !suiteOk){
+      const suiteStatus=Array.isArray(sr)?sr.map(r=>r.status).join('/'):'unavailable';
+      throw new Error(`VASU runtime unavailable (central ${rr.status}, import ${hr.status}, bulk ${br.status}, polish ${pr.status}, navigation ${nr.status}, QA ${qr.status}, suite ${suiteStatus})`);
     }
-    const inflate=async r=>{const x=(await r.text()).replace(/\s+/g,'');const bytes=Uint8Array.from(atob(x),c=>c.charCodeAt(0));return new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text()};
-    const [qjs,sjs]=await Promise.all([inflate(qr),inflate(sr)]);
+    const inflateText=async x=>{const clean=String(x||'').replace(/\s+/g,'');const bytes=Uint8Array.from(atob(clean),c=>c.charCodeAt(0));return new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text()};
+    const qText=await qr.text(),suiteParts=[];for(const r of sr)suiteParts.push(await r.text());
+    const [qjs,sjs]=await Promise.all([inflateText(qText),inflateText(suiteParts.join(''))]);
     setProgress(94);setBoot('Binding financial intelligence graph…','Global periods · reports · cash day book · tools · workspace');
     const patch=(await rr.text())+'\n'+(await hr.text())+'\n'+(await br.text())+'\n'+(await pr.text())+'\n'+(await nr.text())+'\n'+qjs+'\n'+sjs;
     const marker='init().catch(e=>{console.error(e);alert(`Initialization failed: ${e.message}`)});';
