@@ -12,7 +12,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in index.html styles.css styles-v41.css styles-v42.css app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js sw.js manifest.webmanifest qa-v41.mjs qa-v42.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
+          for f in index.html styles.css styles-v41.css styles-v42.css app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js sw.js manifest.webmanifest qa-v41.mjs qa-v42.mjs qa-v42-property.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
           test ! -e app/shini/runtime
           ! grep -R --line-number -E 'DecompressionStream|\beval\s*\(|/hiden/vasu/|runtime/core/' app/shini
           ! grep -R --line-number -E 'Your VASU|Central VASU|open VASU|Value Asset Stewardship' app/shini
@@ -34,6 +34,7 @@ jobs:
           for f in app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js sw.js; do node --check "app/shini/$f"; done
           node app/shini/qa-v41.mjs
           node app/shini/qa-v42.mjs
+          node app/shini/qa-v42-property.mjs
       - name: HTTP and real browser smoke
         shell: bash
         run: |
