@@ -1,0 +1,31 @@
+name: SHINI Production QA
+on:
+  pull_request:
+    paths:
+      - 'app/shini/**'
+      - 'hiden/**'
+      - '.github/workflows/shini-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'app/shini/**'
+      - 'hiden/**'
+      - '.github/workflows/shini-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run SHINI static/integration audit
+        run: node app/shini/qa/audit.mjs
+      - name: Verify legacy route is absent
+        run: |
+          test ! -e hiden
+          ! grep -R --line-number --fixed-strings '/hiden/vasu/' app/shini || (echo 'Legacy route reference found' && exit 1)
