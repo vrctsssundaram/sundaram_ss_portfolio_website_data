@@ -1,5 +1,5 @@
-SHINI v4.2.2 contextual-CRUD release candidate
+SHINI v4.2.3 contextual-CRUD release candidate
 Canonical route: /app/shini/
-Build source: shini-v422-contextual-crud-ui
-Purpose: make destructive actions visible inside edit workflows, add contextual create actions for each record-owning section, complete transaction/account/recurring editor coverage, and harden responsive controller/UI behavior.
-Production promotion only after syntax, invariant/property, contextual CRUD and browser smoke checks pass.
+Build source: shini-v423-context-action-fix
+Purpose: v4.2.2 Delete-next-to-Save and contextual Create controls plus post-merge navigation-title correction so Data & Sync receives its contextual Import action.
+Production promotion only after syntax, invariant/property, contextual CRUD, mapping and browser smoke checks pass.
