@@ -1,0 +1,73 @@
+name: SHINI Production QA
+on:
+  pull_request:
+    paths:
+      - 'app/shini/**'
+      - 'hiden/**'
+      - '.github/workflows/shini-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'app/shini/**'
+      - 'hiden/**'
+      - '.github/workflows/shini-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run SHINI static/integration audit
+        run: |
+          node app/shini/qa/audit.mjs
+          node app/shini/qa/branding-audit.mjs
+      - name: Verify production route hygiene
+        run: |
+          test ! -e hiden
+          ! grep -R --line-number --fixed-strings '/hiden/vasu/' app/shini/index.html app/shini/runtime app/shini/shini-brand-safe.js app/shini/shini-controls.js || (echo 'Legacy runtime route reference found' && exit 1)
+      - name: Headless browser smoke test
+        run: |
+          python3 -m http.server 8765 >/tmp/shini-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for i in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:8765/app/shini/ >/dev/null 2>&1; then break; fi
+            sleep 0.25
+          done
+          for u in /app/shini/ /app/shini/shini-brand-safe.js?v=34 /app/shini/shini-controls.js?v=34 /app/shini/assets/shini-logo.png?v=34 /app/shini/runtime/sync-runtime.js /app/shini/runtime/responsive-navigation.js; do
+            curl --retry 3 --retry-connrefused --retry-delay 1 --fail --silent --show-error "http://127.0.0.1:8765$u" >/dev/null
+          done
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -n "$CHROME" ]; then
+            timeout 45s "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=10000 --dump-dom http://127.0.0.1:8765/app/shini/?qa=34 >/tmp/shini-dom.html
+            python3 - <<'PY'
+          from html.parser import HTMLParser
+          import re
+          raw=open('/tmp/shini-dom.html',encoding='utf-8',errors='ignore').read()
+          class P(HTMLParser):
+              def __init__(self): super().__init__(); self.skip=0; self.parts=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag in ('script','style'): self.skip+=1
+              def handle_endtag(self,tag):
+                  if tag in ('script','style') and self.skip: self.skip-=1
+              def handle_data(self,data):
+                  if not self.skip: self.parts.append(data)
+          p=P(); p.feed(raw)
+          text=' '.join(' '.join(p.parts).split())
+          assert 'SHINI' in text, text[:1200]
+          assert 'Unable to open SHINI' not in text, text[:1800]
+          assert not re.search(r'\bVASU\b',text,re.I), text[:2400]
+          assert 'Value Asset Stewardship Utility' not in text, text[:2400]
+          assert 'shini-logo.png' in raw, 'New SHINI logo not rendered'
+          assert 'class="brand-mark"' not in raw and 'class="shini31-mark"' not in raw and 'class="vasu-logo"' not in raw and 'class="shini-heritage-logo"' not in raw, 'Legacy logo element still rendered'
+          print('Headless SHINI visible-text + logo smoke PASS')
+          PY
+          else
+            echo 'No Chrome/Chromium binary on runner; HTTP/resource and deterministic integration gates still passed.'
+          fi
