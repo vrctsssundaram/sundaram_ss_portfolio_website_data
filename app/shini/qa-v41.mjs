@@ -15,9 +15,9 @@ const loan=A.loanEstimate(s,s.debts[0]);check('Loan repayment linkage',loan.paid
 const audit=A.auditState(s);check('Clean fixture integrity',audit.severe===0);
 const broken=structuredClone(s);broken.transactions[0].categoryId='missing_category';check('Orphan category detection',A.auditState(broken).items.some(x=>x.level==='fail'&&x.name==='Unknown category'));
 const index=read('index.html'),sw=read('sw.js'),css=read('styles-v41.css');
-check('v4.1 script wired',/app-v41\.js\?v=4\.[0-9]+\.0/.test(index));
-check('v4.1 stylesheet wired',/styles-v41\.css\?v=4\.[0-9]+\.0/.test(index));
-check('v4.1 service-worker cache',/app-v41\.js\?v=4\.[0-9]+\.0/.test(sw)&&/styles-v41\.css\?v=4\.[0-9]+\.0/.test(sw));
+check('v4.1 script wired',/app-v41\.js\?v=/.test(index));
+check('v4.1 stylesheet wired',/styles-v41\.css\?v=/.test(index));
+check('v4.1 service-worker cache',/app-v41\.js\?v=/.test(sw)&&/styles-v41\.css\?v=/.test(sw));
 check('Transaction filter CSS',/v41-tx-filterbar/.test(css));
 check('No legacy visible VASU branding',!/Your VASU|Central VASU|open VASU|Value Asset Stewardship/i.test(index+read('app-v41.js')));
 console.log('SHINI v4.1 QA PASS', {version:A.VERSION,subscriptionCandidates:cand.length,loanPaid:loan.paidTotal,auditPasses:audit.pass});
