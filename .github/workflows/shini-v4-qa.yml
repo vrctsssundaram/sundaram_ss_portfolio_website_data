@@ -12,7 +12,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in index.html styles.css app-core.js ui-cloud.js app-ui.js sw.js manifest.webmanifest assets/shini-logo.png; do test -f "app/shini/$f"; done
+          for f in index.html styles.css styles-v41.css app-core.js ui-cloud.js app-ui.js app-v41.js sw.js manifest.webmanifest qa-v41.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
           test ! -e app/shini/runtime
           ! grep -R --line-number -E 'DecompressionStream|\beval\s*\(|/hiden/vasu/|runtime/core/' app/shini
           ! grep -R --line-number -E 'Your VASU|Central VASU|open VASU|Value Asset Stewardship' app/shini
@@ -21,10 +21,15 @@ jobs:
           grep -q 'Surplus, Holdings, Indebtedness, Net Worth &amp; Impairment' app/shini/index.html
           grep -q "balanceImpactApplied===false)return" app/shini/app-ui.js
           grep -q 'KEEP_BOTH' app/shini/app-core.js
+          grep -q 'v41-tx-filterbar' app/shini/styles-v41.css
+          grep -q 'Loan intelligence' app/shini/app-v41.js
+          grep -q 'Visual Insights' app/shini/app-v41.js
           node --check app/shini/app-core.js
           node --check app/shini/ui-cloud.js
           node --check app/shini/app-ui.js
+          node --check app/shini/app-v41.js
           node --check app/shini/sw.js
+          node app/shini/qa-v41.mjs
       - name: HTTP and real browser smoke
         shell: bash
         run: |
@@ -35,7 +40,7 @@ jobs:
           ready=0
           for i in $(seq 1 40); do if curl -fsS http://127.0.0.1:8765/app/shini/ >/dev/null; then ready=1; break; fi; sleep .25; done
           test "$ready" = 1
-          for u in /app/shini/styles.css /app/shini/app-core.js /app/shini/ui-cloud.js /app/shini/app-ui.js /app/shini/assets/shini-logo.png; do curl -fsS "http://127.0.0.1:8765$u" >/dev/null; done
+          for u in /app/shini/styles.css /app/shini/styles-v41.css /app/shini/app-core.js /app/shini/ui-cloud.js /app/shini/app-ui.js /app/shini/app-v41.js /app/shini/assets/shini-logo.png; do curl -fsS "http://127.0.0.1:8765$u" >/dev/null; done
           CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
           if [ -n "$CHROME" ]; then
             timeout 45s "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=2500 --dump-dom http://127.0.0.1:8765/app/shini/ >/tmp/shini-dom.html
@@ -47,6 +52,6 @@ jobs:
           assert 'Your SHINI password' in t
           assert 'Unable to open SHINI' not in t
           assert 'VASU' not in t
-          print('SHINI v4 browser smoke PASS')
+          print('SHINI v4.1 browser smoke PASS')
           PY
           fi
