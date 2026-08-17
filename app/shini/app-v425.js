@@ -40,6 +40,10 @@ function hardenedStageCanonical(s,rows){
 if(typeof stageCanonical==='function'){stageCanonical=hardenedStageCanonical;globalThis.stageCanonical=hardenedStageCanonical}
 if(typeof commitStage==='function'&&!commitStage.__v425){const prior=commitStage,wrapped=function(s,stage){for(const x of stage||[])if(['exact','batch_exact','possible'].includes(x.status)&&x.action==='ADD')x.action='SKIP';return prior(s,stage)};wrapped.__v425=true;commitStage=wrapped;globalThis.commitStage=wrapped}
 
+// Balance-sheet/reimbursement inflows must affect the bank balance but must not inflate
+// income/net-operating-flow KPIs. CSV rows mark these with reimbursable=true.
+if(typeof metrics==='function'&&!metrics.__v425){const prior=metrics,wrapped=function(s,tx){const m=prior(s,tx),nonOperatingInflow=(tx||[]).filter(t=>semantic(s,t)==='income'&&t.reimbursable===true).reduce((z,t)=>z+Number(t.amount||0),0);m.grossInflow=Number(m.income||0);m.nonOperatingInflow=nonOperatingInflow;m.income=Math.max(0,m.grossInflow-nonOperatingInflow);m.net=Number(m.net||0)-nonOperatingInflow;return m};wrapped.__v425=true;metrics=wrapped;globalThis.metrics=wrapped}
+
 function resetPanel(){
   const root=document.getElementById('pageRoot'),title=document.getElementById('pageTitle')?.textContent.trim();
   if(!root||title!=='Data & Sync'||q('#v425ResetPanel',root))return;
