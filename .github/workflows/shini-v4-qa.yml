@@ -8,11 +8,11 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Architecture and syntax gate
+      - name: Architecture, syntax and integrity gate
         shell: bash
         run: |
           set -euo pipefail
-          for f in index.html styles.css styles-v41.css app-core.js ui-cloud.js app-ui.js app-v41.js sw.js manifest.webmanifest qa-v41.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
+          for f in index.html styles.css styles-v41.css styles-v42.css app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js sw.js manifest.webmanifest qa-v41.mjs qa-v42.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
           test ! -e app/shini/runtime
           ! grep -R --line-number -E 'DecompressionStream|\beval\s*\(|/hiden/vasu/|runtime/core/' app/shini
           ! grep -R --line-number -E 'Your VASU|Central VASU|open VASU|Value Asset Stewardship' app/shini
@@ -24,12 +24,16 @@ jobs:
           grep -q 'v41-tx-filterbar' app/shini/styles-v41.css
           grep -q 'Loan intelligence' app/shini/app-v41.js
           grep -q 'Visual Insights' app/shini/app-v41.js
-          node --check app/shini/app-core.js
-          node --check app/shini/ui-cloud.js
-          node --check app/shini/app-ui.js
-          node --check app/shini/app-v41.js
-          node --check app/shini/sw.js
+          grep -q 'hardDeleteDefinition' app/shini/app-v42-core.js
+          grep -q 'PBKDF2' app/shini/app-v42-core.js
+          grep -q 'data-v42-delete-tx' app/shini/app-v42-ledger.js
+          grep -q 'Merge and delete account' app/shini/app-v42-crud.js
+          grep -q 'Structured data imports' app/shini/app-v42-imports.js
+          grep -q 'Documents & Renewals' app/shini/app-v42-platform.js
+          grep -q 'notificationState' app/shini/app-v42-platform.js
+          for f in app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js sw.js; do node --check "app/shini/$f"; done
           node app/shini/qa-v41.mjs
+          node app/shini/qa-v42.mjs
       - name: HTTP and real browser smoke
         shell: bash
         run: |
@@ -40,10 +44,10 @@ jobs:
           ready=0
           for i in $(seq 1 40); do if curl -fsS http://127.0.0.1:8765/app/shini/ >/dev/null; then ready=1; break; fi; sleep .25; done
           test "$ready" = 1
-          for u in /app/shini/styles.css /app/shini/styles-v41.css /app/shini/app-core.js /app/shini/ui-cloud.js /app/shini/app-ui.js /app/shini/app-v41.js /app/shini/assets/shini-logo.png; do curl -fsS "http://127.0.0.1:8765$u" >/dev/null; done
+          for u in /app/shini/styles.css /app/shini/styles-v41.css /app/shini/styles-v42.css /app/shini/app-core.js /app/shini/ui-cloud.js /app/shini/app-ui.js /app/shini/app-v41.js /app/shini/app-v42-core.js /app/shini/app-v42-ledger.js /app/shini/app-v42-crud.js /app/shini/app-v42-imports.js /app/shini/app-v42-platform.js /app/shini/assets/shini-logo.png; do curl -fsS "http://127.0.0.1:8765$u" >/dev/null; done
           CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
           if [ -n "$CHROME" ]; then
-            timeout 45s "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=2500 --dump-dom http://127.0.0.1:8765/app/shini/ >/tmp/shini-dom.html
+            timeout 45s "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=3500 --dump-dom http://127.0.0.1:8765/app/shini/ >/tmp/shini-dom.html
             python3 - <<'PY'
           from pathlib import Path
           t=Path('/tmp/shini-dom.html').read_text(errors='ignore')
@@ -52,6 +56,6 @@ jobs:
           assert 'Your SHINI password' in t
           assert 'Unable to open SHINI' not in t
           assert 'VASU' not in t
-          print('SHINI v4.1 browser smoke PASS')
+          print('SHINI v4.2 browser smoke PASS')
           PY
           fi
