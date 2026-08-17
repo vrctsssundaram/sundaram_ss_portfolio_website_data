@@ -1,9 +1,9 @@
 {
   "product": "SHINI",
-  "build": "4.2.4",
-  "architecture": "clean-room modular runtime + guarded CRUD and contextual interaction layer",
+  "build": "4.2.5",
+  "architecture": "clean-room modular runtime + guarded CRUD + idempotent statement ingestion",
   "route": "/app/shini/",
   "legacyPayloadLoader": false,
-  "features": ["transaction multi-filter", "visual insights", "loan intelligence", "recurring/subscription inference", "actionable notifications", "guarded definition CRUD", "separate throttled deletion credential", "transaction tombstones", "manual-notification to bank-import reconciliation", "multi-domain structured imports", "goals/assets/investments/insurance/documents CRUD", "safe account merge/remap", "credit-card liability accounting", "browser capability matrix and app badging", "delete-next-to-save editor consistency", "contextual add/create actions", "full transaction editor", "full recurring editor", "full account editor", "responsive CRUD controls", "Data & Sync contextual import action", "browser global-scope runtime collision fix", "combined classic-script integration QA", "v4.2.4 runtime integration QA"],
-  "candidateAt": "2026-08-18T01:40:00+05:30"
+  "features": ["transaction multi-filter", "visual insights", "loan intelligence", "recurring/subscription inference", "actionable notifications", "guarded definition CRUD", "separate throttled deletion credential", "transaction tombstones", "manual-notification to bank-import reconciliation", "multi-domain structured imports", "goals/assets/investments/insurance/documents CRUD", "safe account merge/remap", "credit-card liability accounting", "browser capability matrix and app badging", "delete-next-to-save editor consistency", "contextual add/create actions", "full transaction editor", "full recurring editor", "full account editor", "responsive CRUD controls", "Data & Sync contextual import action", "browser global-scope runtime collision fix", "idempotent canonical import", "cross-batch bank-reference duplicate detection", "within-batch duplicate suppression", "guarded clean financial-data reset", "v4.2.5 import integrity QA"],
+  "candidateAt": "2026-08-18T02:18:00+05:30"
 }
