@@ -1,1 +1,0 @@
-SHINI v3.1 runtime baseline: verified VASU v2.9 functional stack (v2.4 central sync, v2.5 bulk import, v2.6 polish, v2.7 navigation, v2.8 QA/integrity, v2.9 analysis/tools) plus presentation-only SHINI branding. Canonical route: /app/shini/. Legacy /hiden/vasu/ redirects here.
