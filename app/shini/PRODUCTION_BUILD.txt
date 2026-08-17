@@ -1,4 +1,5 @@
-SHINI v4.0.2 production promotion
+SHINI v4.1.0 feature-hardening release candidate
 Canonical route: /app/shini/
-Build source: main
-Purpose: force production-host deployment after PR #20 clean-room merge and distinguish production from PR/branch previews.
+Build source: shini-v41-transactions-loans-insights
+Purpose: transaction multi-filtering, visual analytics, loan/subscription intelligence, reminders, integrity diagnostics and post-import hardening.
+Production promotion only after QA and review.
