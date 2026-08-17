@@ -1,0 +1,4 @@
+SHINI v4.0.2 production promotion
+Canonical route: /app/shini/
+Build source: main
+Purpose: force production-host deployment after PR #20 clean-room merge and distinguish production from PR/branch previews.
