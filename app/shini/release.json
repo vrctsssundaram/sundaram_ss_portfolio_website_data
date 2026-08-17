@@ -1,9 +1,9 @@
 {
   "product": "SHINI",
-  "build": "4.2.1",
-  "architecture": "clean-room modular runtime + guarded CRUD and structured-data integrity layer",
+  "build": "4.2.2",
+  "architecture": "clean-room modular runtime + guarded CRUD and contextual interaction layer",
   "route": "/app/shini/",
   "legacyPayloadLoader": false,
-  "features": ["transaction multi-filter", "visual insights", "loan intelligence", "recurring/subscription inference", "actionable notifications", "guarded definition CRUD", "separate throttled deletion credential", "transaction tombstones", "manual-notification to bank-import reconciliation", "multi-domain structured imports", "goals/assets/investments/insurance/documents CRUD", "safe account merge/remap", "credit-card liability accounting", "browser capability matrix and app badging", "v4.2.1 structural integrity QA"],
-  "candidateAt": "2026-08-17T23:58:00+05:30"
+  "features": ["transaction multi-filter", "visual insights", "loan intelligence", "recurring/subscription inference", "actionable notifications", "guarded definition CRUD", "separate throttled deletion credential", "transaction tombstones", "manual-notification to bank-import reconciliation", "multi-domain structured imports", "goals/assets/investments/insurance/documents CRUD", "safe account merge/remap", "credit-card liability accounting", "browser capability matrix and app badging", "delete-next-to-save editor consistency", "contextual add/create actions", "full transaction editor", "full recurring editor", "full account editor", "responsive CRUD controls", "v4.2.2 contextual interaction QA"],
+  "candidateAt": "2026-08-18T01:10:00+05:30"
 }

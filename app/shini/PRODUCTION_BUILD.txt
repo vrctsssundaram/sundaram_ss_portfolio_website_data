@@ -1,5 +1,5 @@
-SHINI v4.2.1 structural-integrity release candidate
+SHINI v4.2.2 contextual-CRUD release candidate
 Canonical route: /app/shini/
-Build source: shini-v421-integrity-followup
-Purpose: v4.2 guarded CRUD plus interaction hardening for cross-version notification rendering, manual-notification/bank-import reconciliation, safe account merge neutralization, credit-card liability accounting, delete-credential throttling and app badging.
-Production promotion only after syntax, invariant/property, integration and browser smoke checks pass.
+Build source: shini-v422-contextual-crud-ui
+Purpose: make destructive actions visible inside edit workflows, add contextual create actions for each record-owning section, complete transaction/account/recurring editor coverage, and harden responsive controller/UI behavior.
+Production promotion only after syntax, invariant/property, contextual CRUD and browser smoke checks pass.
