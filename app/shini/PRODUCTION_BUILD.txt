@@ -1,5 +1,5 @@
-SHINI v4.2.3 contextual-CRUD release candidate
+SHINI v4.2.4 runtime-integration release candidate
 Canonical route: /app/shini/
-Build source: shini-v423-context-action-fix
-Purpose: v4.2.2 Delete-next-to-Save and contextual Create controls plus post-merge navigation-title correction so Data & Sync receives its contextual Import action.
-Production promotion only after syntax, invariant/property, contextual CRUD, mapping and browser smoke checks pass.
+Build source: shini-v424-runtime-integration-fix
+Purpose: fix the browser global lexical collision that prevented the v4.2 enhancement chain from parsing, cache-bust all SHINI assets, and add combined-script/runtime QA so authenticated CRUD features can actually initialize.
+Production promotion only after individual syntax, combined classic-script syntax, invariant/property, contextual CRUD, mapping and real-browser runtime checks pass.

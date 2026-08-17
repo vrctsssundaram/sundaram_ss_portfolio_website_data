@@ -1,9 +1,9 @@
 {
   "product": "SHINI",
-  "build": "4.2.3",
+  "build": "4.2.4",
   "architecture": "clean-room modular runtime + guarded CRUD and contextual interaction layer",
   "route": "/app/shini/",
   "legacyPayloadLoader": false,
-  "features": ["transaction multi-filter", "visual insights", "loan intelligence", "recurring/subscription inference", "actionable notifications", "guarded definition CRUD", "separate throttled deletion credential", "transaction tombstones", "manual-notification to bank-import reconciliation", "multi-domain structured imports", "goals/assets/investments/insurance/documents CRUD", "safe account merge/remap", "credit-card liability accounting", "browser capability matrix and app badging", "delete-next-to-save editor consistency", "contextual add/create actions", "full transaction editor", "full recurring editor", "full account editor", "responsive CRUD controls", "Data & Sync contextual import action", "v4.2.3 interaction QA"],
-  "candidateAt": "2026-08-18T01:10:00+05:30"
+  "features": ["transaction multi-filter", "visual insights", "loan intelligence", "recurring/subscription inference", "actionable notifications", "guarded definition CRUD", "separate throttled deletion credential", "transaction tombstones", "manual-notification to bank-import reconciliation", "multi-domain structured imports", "goals/assets/investments/insurance/documents CRUD", "safe account merge/remap", "credit-card liability accounting", "browser capability matrix and app badging", "delete-next-to-save editor consistency", "contextual add/create actions", "full transaction editor", "full recurring editor", "full account editor", "responsive CRUD controls", "Data & Sync contextual import action", "browser global-scope runtime collision fix", "combined classic-script integration QA", "v4.2.4 runtime integration QA"],
+  "candidateAt": "2026-08-18T01:40:00+05:30"
 }

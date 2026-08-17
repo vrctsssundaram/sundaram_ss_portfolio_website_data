@@ -7,6 +7,6 @@ const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
 assert.ok(base.includes("'Data Management'"),'expected legacy mismatched key so the compatibility fix remains testable');
 assert.ok(fix.includes("context['Data & Sync']"),'Data & Sync contextual action fix missing');
 assert.ok(fix.includes("delete context['Data Management']"),'stale title mapping must be removed');
-assert.ok(html.includes('app-v423.js?v=4.2.3'),'v4.2.3 fix not wired');
-assert.ok(sw.includes('shini-v423-static-1')&&sw.includes('app-v423.js?v=4.2.3'),'v4.2.3 cache not rotated');
+assert.ok(/app-v423\.js\?v=4\.2\.\d+/.test(html),'v4.2.3 fix not wired in current build');
+assert.ok(/shini-v4\d+-static-1/.test(sw)&&/app-v423\.js\?v=4\.2\.\d+/.test(sw),'v4.2.3 asset must remain cached in current build');
 console.log('SHINI v4.2.3 navigation/context mapping QA PASS');
