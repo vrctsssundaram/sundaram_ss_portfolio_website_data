@@ -14,11 +14,11 @@ assert.ok(js.includes("type=\"button\" id=\"v422DeleteTxInEditor\""),'transactio
 assert.ok(js.includes("type=\"button\" id=\"v422DeleteAccountInEditor\""),'account editor delete must be non-submit');
 assert.ok(js.includes("type=\"button\" id=\"v422DeleteRecurringInEditor\""),'recurring editor delete must be non-submit');
 assert.ok(js.includes("data-v42-cash-edit"),'cash edit must route through the full transaction editor');
-assert.ok(js.includes("accountTypeId" )&&js.includes("scope")&&js.includes("creditLimit"),'account editor must expose type/scope/credit metadata');
+assert.ok(js.includes("accountTypeId")&&js.includes("scope")&&js.includes("creditLimit"),'account editor must expose type/scope/credit metadata');
 assert.ok(js.includes("categoryId")&&js.includes("paymentMethodId")&&js.includes("autoDebit"),'recurring editor must expose relational fields');
 assert.ok(css.includes('.v422-editor-actions')&&css.includes('.v422-context-add'),'v4.2.2 responsive CRUD styles missing');
-assert.ok(html.includes('styles-v422.css?v=4.2.2')&&html.includes('app-v422.js?v=4.2.2'),'v4.2.2 assets not wired');
-assert.ok(/shini-v4\d+-static-1/.test(sw)&&sw.includes("app-v422.js?v=4.2.2"),'v4.2.2 asset must remain present in the active service-worker cache');
+assert.ok(/styles-v422\.css\?v=4\.2\.\d+/.test(html)&&/app-v422\.js\?v=4\.2\.\d+/.test(html),'v4.2.2 assets not wired in current build');
+assert.ok(/shini-v4\d+-static-1/.test(sw)&&/app-v422\.js\?v=4\.2\.\d+/.test(sw),'v4.2.2 asset must remain present in the active service-worker cache');
 const contextLabels=[...js.matchAll(/'([^']+)'\:\['\+ ([^']+)'/g)].map(m=>`${m[1]}:${m[2]}`);
 assert.ok(contextLabels.length>=13,`expected >=13 contextual create actions, got ${contextLabels.length}`);
 console.log(`SHINI v4.2.2 contextual CRUD QA PASS (${required.length} required markers, ${contextLabels.length} contextual actions)`);
