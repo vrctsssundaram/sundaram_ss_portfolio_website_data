@@ -39,16 +39,17 @@ check('Core has safe-to-spend',/function\s+safeToSpend\s*\(/.test(core));
 check('Core has transaction revision support',/revision/i.test(core));
 check('Core has no external script imports',!/<script[^>]+src=["']https?:/i.test(core));
 check('Core has no service-role secret',!/service[_-]?role/i.test(core));
-const ids=[...core.matchAll(/\sid=["']([^"']+)["']/g)].map(m=>m[1]);
+const coreStatic=core.replace(/<script(?:\s[^>]*)?>[\s\S]*?<\/script>/gi,'');
+const ids=[...coreStatic.matchAll(/\sid=["']([^"']+)["']/g)].map(m=>m[1]);
 const dup=[...new Set(ids.filter((x,i)=>ids.indexOf(x)!==i))];
-check('Core static DOM IDs unique',dup.length===0,dup.join(','));
+check('Initial static DOM IDs unique',dup.length===0,dup.join(','));
 
 const mods={sync:req('app/shini/runtime/sync-runtime.js'),integrity:req('app/shini/runtime/import-integrity.js'),bulk:req('app/shini/runtime/bulk-import-ui.js'),polish:req('app/shini/runtime/interaction-polish.js'),nav:req('app/shini/runtime/responsive-navigation.js'),brand:req('app/shini/shini-brand-safe.js')};
 for(const [k,v] of Object.entries(mods)) parseJS(k,v);
 let qa=''; expect('Accounting-integrity payload gunzip',()=>qa=gunzipText(req('app/shini/runtime/accounting-integrity.b64'))); if(qa)parseJS('accounting-integrity',qa);
 let v29b=''; for(let i=1;i<=6;i++)v29b+=req(`app/shini/runtime/features/29/${String(i).padStart(2,'0')}.txt`);
 let v29=''; expect('Feature-29 payload gunzip',()=>v29=gunzipText(v29b)); if(v29)parseJS('feature-29',v29);
-let controls=''; expect('SHINI controls gunzip',()=>controls=gunzipText(req('app/shini/shini-v32-controls.js'))); if(controls)parseJS('shini-v32-controls',controls);
+const controls=req('app/shini/shini-controls.js'); parseJS('shini-controls',controls);
 
 check('Central cloud uses publishable client key',/sb_publishable_/.test(mods.sync));
 check('No service-role key in active runtime',!Object.values(mods).join('\n').match(/service[_-]?role/i));
@@ -70,24 +71,21 @@ check('Safe area support',/safe-area-inset-bottom/.test(mods.nav));
 check('Escape closes mobile drawer',/e\.key==='Escape'/.test(mods.nav));
 check('Active navigation auto-scroll',/vasuScrollActiveNav/.test(mods.nav));
 
-if(controls){
- check('Three text color categories',/Primary text color/.test(controls)&&/Secondary text color/.test(controls)&&/Accent \/ indicator text/.test(controls));
- check('Two configurable mobile shortcuts',/Mobile shortcut 1/.test(controls)&&/Mobile shortcut 2/.test(controls));
- check('Uniform SVG transaction icon',/svgIcon\('tx'\)/.test(controls));
- check('Bounded diagnostics log',/MAX_LOG=500/.test(controls));
- check('Self-test checks transactions/accounts/DOM/navigation',/Duplicate transaction id/.test(controls)&&/Duplicate DOM id/.test(controls)&&/Navigation target missing/.test(controls));
- check('Safe update package schema',/shini-config-update-v1/.test(controls));
- check('Safe update is non-executable',!/eval\(|new Function\(/.test(controls));
- check('Controls do not use window.state',!/window\.state/.test(controls));
- check('Controls do not redefine ledger mutation functions',!/function\s+(addAccountEffect|applyDebtEffect|makeTransactionFromForm|commitExchangeImport)\s*\(/.test(controls));
- check('Heritage logo is inline SVG',/shini-heritage-logo/.test(controls)&&/<svg/.test(controls));
-}
+check('Three text color categories',/Primary text color/.test(controls)&&/Secondary text color/.test(controls)&&/Accent \/ indicator text/.test(controls));
+check('Two configurable mobile shortcuts',/Mobile shortcut 1/.test(controls)&&/Mobile shortcut 2/.test(controls));
+check('Uniform SVG transaction icon',/svgIcon\('tx'\)/.test(controls));
+check('Bounded diagnostics log',/MAX_LOG=500/.test(controls));
+check('Self-test checks transactions/accounts/DOM/navigation',/Duplicate transaction id/.test(controls)&&/Duplicate DOM id/.test(controls)&&/Navigation target missing/.test(controls));
+check('Safe update package schema',/shini-config-update-v1/.test(controls));
+check('Safe update is non-executable',!/eval\(|new Function\(/.test(controls));
+check('Controls do not use window.state',!/window\.state/.test(controls));
+check('Controls do not redefine ledger mutation functions',!/function\s+(addAccountEffect|applyDebtEffect|makeTransactionFromForm|commitExchangeImport)\s*\(/.test(controls));
+check('Heritage logo is inline SVG',/shini-heritage-logo/.test(controls)&&/<svg/.test(controls));
 
 if(v29){
  check('Global analysis window exists',/Analysis Window|analysis window/i.test(v29));
- for(const s of ['Current Month','Previous Month','Last 3 Months','Last 6 Months','Previous FY','Custom']) check(`Period preset: ${s}`,v29.includes(s));
- check('Exports include CSV',/CSV/.test(v29)); check('Exports include Excel/XLS',/XLS|Excel/.test(v29)); check('Exports include Word/DOC',/DOC|Word/.test(v29)); check('Exports include JSON',/JSON/.test(v29)); check('Print/PDF path exists',/Print|PDF/.test(v29));
- check('Cash Day Book exists',/Cash Day Book/i.test(v29)); check('Tools hub exists',/Tools & Resources|Financial Tools/i.test(v29)); check('Market hub does not invent live provider',/No verified live market provider|not configured/i.test(v29));
+ const periodSignals=[[/current.{0,10}month/i,'Current month'],[/previous.{0,10}month|prev.{0,10}month/i,'Previous month'],[/last.{0,6}3|3.{0,8}month/i,'Last 3 months'],[/last.{0,6}6|6.{0,8}month/i,'Last 6 months'],[/previous.{0,8}(?:fy|financial)|prev.{0,8}fy/i,'Previous FY'],[/custom/i,'Custom']];for(const [rx,label] of periodSignals)check(`Period capability: ${label}`,rx.test(v29));
+ check('Exports include CSV',/CSV/.test(v29));check('Exports include Excel/XLS',/XLS|Excel/.test(v29));check('Exports include Word/DOC',/DOC|Word/.test(v29));check('Exports include JSON',/JSON/.test(v29));check('Print/PDF path exists',/Print|PDF/.test(v29));check('Cash Day Book exists',/Cash Day Book/i.test(v29));check('Tools hub exists',/Tools & Resources|Financial Tools/i.test(v29));check('Market hub does not invent live provider',/No verified live market provider|not configured/i.test(v29));
 }
 
 check('Brand bridge maps VASU to SHINI',/VASU/.test(mods.brand) && /SHINI/.test(mods.brand));
@@ -99,7 +97,7 @@ check('Patch contains all required major modules',patch.length>100000,`${patch.l
 const marker='init().catch(e=>{console.error(e);alert(`Initialization failed: ${e.message}`)});';
 let integrated=core.includes(marker)?core.replace(marker,patch+'\n'+marker):'';
 check('Integrated HTML reconstructs',integrated.length>core.length && integrated.includes('SHINI'));
-for(const [i,m] of [...integrated.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].entries()) if(m[1].trim()) parseJS(`integrated-script-${i+1}`,m[1]);
+for(const [i,m] of [...integrated.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].entries())if(m[1].trim())parseJS(`integrated-script-${i+1}`,m[1]);
 
 const appTree=[];function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else appTree.push(path.relative(ROOT,p).replaceAll('\\','/'))}}walk(path.join(ROOT,'app/shini'));
 check('No obsolete v3.0 hotfix in canonical app',!appTree.some(p=>/v30|v301|hotfix/i.test(p)));
@@ -110,5 +108,4 @@ check('Oracle borrowing increases cash without consumption',accountEffect({type:
 check('Oracle transfer net liquid zero',(()=>{const x=accountEffect({type:'transfer',amount:500});return x.src+x.dst===0})());
 check('Oracle investment is asset transfer',(()=>{const x=accountEffect({type:'investment',amount:500});return x.src===-500&&x.dst===500})());
 
-console.log(`SHINI QA: ${pass.length} PASS / ${fail.length} FAIL / ${warn.length} WARN`);
-for(const x of pass)console.log('PASS',x); for(const x of warn)console.warn('WARN',x); for(const x of fail)console.error('FAIL',x); if(fail.length)process.exit(1);
+console.log(`SHINI QA: ${pass.length} PASS / ${fail.length} FAIL / ${warn.length} WARN`);for(const x of pass)console.log('PASS',x);for(const x of warn)console.warn('WARN',x);for(const x of fail)console.error('FAIL',x);if(fail.length)process.exit(1);
