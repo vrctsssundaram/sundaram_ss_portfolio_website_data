@@ -1,5 +1,5 @@
-SHINI v4.2.0 structural-integrity release candidate
+SHINI v4.2.1 structural-integrity release candidate
 Canonical route: /app/shini/
-Build source: shini-v42-integrity-crud-imports
-Purpose: guarded CRUD, definition dependency remapping, separate delete authorization, transaction re-import tombstones, multi-domain structured imports, editable planning/master records, notification reconciliation, document/renewal metadata and device capability support.
-Production promotion only after syntax, state-invariant, browser smoke and pull-request checks pass.
+Build source: shini-v421-integrity-followup
+Purpose: v4.2 guarded CRUD plus interaction hardening for cross-version notification rendering, manual-notification/bank-import reconciliation, safe account merge neutralization, credit-card liability accounting, delete-credential throttling and app badging.
+Production promotion only after syntax, invariant/property, integration and browser smoke checks pass.
