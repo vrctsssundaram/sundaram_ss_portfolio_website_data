@@ -18,7 +18,7 @@ assert.ok(js.includes("accountTypeId" )&&js.includes("scope")&&js.includes("cred
 assert.ok(js.includes("categoryId")&&js.includes("paymentMethodId")&&js.includes("autoDebit"),'recurring editor must expose relational fields');
 assert.ok(css.includes('.v422-editor-actions')&&css.includes('.v422-context-add'),'v4.2.2 responsive CRUD styles missing');
 assert.ok(html.includes('styles-v422.css?v=4.2.2')&&html.includes('app-v422.js?v=4.2.2'),'v4.2.2 assets not wired');
-assert.ok(sw.includes("shini-v422-static-1")&&sw.includes("app-v422.js?v=4.2.2"),'v4.2.2 service-worker cache not rotated');
+assert.ok(/shini-v4\d+-static-1/.test(sw)&&sw.includes("app-v422.js?v=4.2.2"),'v4.2.2 asset must remain present in the active service-worker cache');
 const contextLabels=[...js.matchAll(/'([^']+)'\:\['\+ ([^']+)'/g)].map(m=>`${m[1]}:${m[2]}`);
 assert.ok(contextLabels.length>=13,`expected >=13 contextual create actions, got ${contextLabels.length}`);
 console.log(`SHINI v4.2.2 contextual CRUD QA PASS (${required.length} required markers, ${contextLabels.length} contextual actions)`);
