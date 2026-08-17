@@ -1,0 +1,12 @@
+/* SHINI v4.2.2 contextual CRUD interaction consistency */
+.v422-context-add{white-space:nowrap}
+.v422-editor-actions{align-items:center}.v422-editor-actions .danger{margin-left:auto}
+.v422-credit-fields{display:contents}
+.v422-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.v422-choice-grid button{min-height:48px;text-align:left}
+.v422-action-cell{white-space:nowrap}.v422-action-cell>button{margin:2px 2px 2px 0}
+.v422-focus-pulse{outline:2px solid color-mix(in srgb,var(--gold) 78%,transparent);outline-offset:5px;border-radius:12px;animation:v422Pulse 1.2s ease-out}
+@keyframes v422Pulse{0%{box-shadow:0 0 0 0 rgba(201,168,76,.42)}100%{box-shadow:0 0 0 18px rgba(201,168,76,0)}}
+button:disabled{cursor:not-allowed;opacity:.5}
+@media(max-width:820px){.top-actions{flex-wrap:wrap;justify-content:flex-end}.v422-editor-actions .danger{margin-left:0}.v422-choice-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.v422-context-add{padding:9px 10px;font-size:.76rem}.top-actions{gap:5px}.v422-editor-actions{display:grid;grid-template-columns:1fr}.v422-editor-actions button{width:100%}}
