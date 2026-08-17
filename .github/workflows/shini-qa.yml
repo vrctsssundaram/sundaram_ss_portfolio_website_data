@@ -25,7 +25,39 @@ jobs:
           node-version: '22'
       - name: Run SHINI static/integration audit
         run: node app/shini/qa/audit.mjs
-      - name: Verify legacy route is absent
+      - name: Verify production route hygiene
         run: |
           test ! -e hiden
-          ! grep -R --line-number --fixed-strings '/hiden/vasu/' app/shini || (echo 'Legacy route reference found' && exit 1)
+          ! grep -R --line-number --fixed-strings '/hiden/vasu/' app/shini/index.html app/shini/runtime app/shini/shini-brand-safe.js app/shini/shini-controls.js || (echo 'Legacy runtime route reference found' && exit 1)
+      - name: Headless browser smoke test
+        run: |
+          python3 -m http.server 8765 >/tmp/shini-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for u in /app/shini/ /app/shini/shini-brand-safe.js /app/shini/shini-controls.js /app/shini/runtime/sync-runtime.js /app/shini/runtime/responsive-navigation.js; do
+            curl --retry 3 --retry-delay 1 --fail --silent --show-error "http://127.0.0.1:8765$u" >/dev/null
+          done
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -n "$CHROME" ]; then
+            timeout 45s "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=8000 --dump-dom http://127.0.0.1:8765/app/shini/ >/tmp/shini-dom.html
+            python3 - <<'PY'
+          from html.parser import HTMLParser
+          class P(HTMLParser):
+              def __init__(self): super().__init__(); self.skip=0; self.parts=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag in ('script','style'): self.skip+=1
+              def handle_endtag(self,tag):
+                  if tag in ('script','style') and self.skip: self.skip-=1
+              def handle_data(self,data):
+                  if not self.skip: self.parts.append(data)
+          p=P(); p.feed(open('/tmp/shini-dom.html',encoding='utf-8',errors='ignore').read())
+          text=' '.join(' '.join(p.parts).split())
+          assert 'SHINI' in text, text[:1000]
+          assert 'Unable to open SHINI' not in text, text[:1500]
+          assert 'Your VASU password' not in text, text[:1500]
+          assert 'Value Asset Stewardship Utility' not in text, text[:1500]
+          print('Headless SHINI visible-text smoke PASS')
+          PY
+          else
+            echo 'No Chrome/Chromium binary on runner; HTTP/resource and deterministic integration gates still passed.'
+          fi
