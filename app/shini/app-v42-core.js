@@ -2,10 +2,10 @@
 // Adds guarded CRUD, referential remap, multi-domain bulk import, durable notification
 // resolution, document/renewal metadata and cross-device capability controls.
 'use strict';
-const VERSION='4.2.1',PREFIX='v42';
+const VERSION='4.2.4',PREFIX='v42';
 const $=id=>document.getElementById(id),q=(s,r=document)=>r?.querySelector(s),qa=(s,r=document)=>[...(r?.querySelectorAll(s)||[])];
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const num=v=>Number.isFinite(Number(v))?Number(v):0,now=()=>new Date().toISOString(),today=()=>now().slice(0,10);
+const num=v=>Number.isFinite(Number(v))?Number(v):0,now=()=>new Date().toISOString();
 const uid=(p='id')=>`${p}_${Date.now().toString(36)}_${crypto.getRandomValues(new Uint32Array(1))[0].toString(36)}`;
 const sem=(s,t)=>{try{return semantic(s,t)}catch{return t.type||'expense'}};
 const cash=(s,v)=>{try{return money(s,v)}catch{return new Intl.NumberFormat('en-IN',{style:'currency',currency:s?.settings?.currency||'INR',maximumFractionDigits:2}).format(num(v))}};
