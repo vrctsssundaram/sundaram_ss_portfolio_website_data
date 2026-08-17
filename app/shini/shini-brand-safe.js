@@ -1,14 +1,21 @@
-// SHINI safe presentation bridge. No ledger/account/debt calculations.
+// SHINI v3.3 safe presentation bridge. It never mutates ledger records or canonical IDs.
 (()=>{
- const FULL='Surplus, Holdings, Indebtedness, Net Worth & Impairment';
- const replace=()=>{
-   document.title='SHINI — '+FULL;
-   document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(el=>{let v=el.getAttribute('placeholder')||'';if(/VASU|ChatGPT/i.test(v))el.setAttribute('placeholder',v.replace(/VASU/gi,'SHINI').replace(/ChatGPT/gi,'AI tool'))});
-   document.querySelectorAll('[title],[aria-label]').forEach(el=>{for(const k of ['title','aria-label']){let v=el.getAttribute(k)||'';if(/VASU|Value\s*&?\s*Asset Stewardship Utility|ChatGPT/i.test(v))el.setAttribute(k,v.replace(/Value\s*&?\s*Asset Stewardship Utility/gi,FULL).replace(/VASU/gi,'SHINI').replace(/ChatGPT/gi,'AI tool'))}});
-   document.querySelectorAll('h1,h2,h3,h4,.sidebar-brand,.lock-card,.auth-card,.panel-head,.toolbar').forEach(root=>{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),a=[];while(w.nextNode())a.push(w.currentNode);a.forEach(n=>{let v=n.nodeValue||'';if(/VASU|Value\s*&?\s*Asset Stewardship Utility|ChatGPT/i.test(v))n.nodeValue=v.replace(/Value\s*&?\s*Asset Stewardship Utility/gi,FULL).replace(/\bVASU\b/g,'SHINI').replace(/ChatGPT/gi,'AI tool')})});
- };
- const wrap=n=>{const f=window[n];if(typeof f!=='function'||f.__shiniBrand)return;const g=function(...a){const r=f.apply(this,a);requestAnimationFrame(replace);return r};g.__shiniBrand=true;window[n]=g};
- ['showApp','showPage','renderAll','renderPageModule','openModal','showLock'].forEach(wrap);requestAnimationFrame(replace);document.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(replace),{once:true});
- (async()=>{try{const r=await fetch('/app/shini/shini-v32-controls.js',{cache:'no-store'});if(!r.ok)throw new Error('SHINI controls unavailable '+r.status);const t=(await r.text()).replace(/\s+/g,''),b=Uint8Array.from(atob(t),c=>c.charCodeAt(0));const js=await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('gzip'))).text();(0,eval)(js)}catch(e){console.error('SHINI controls load failed',e)}})();
- window.SHINI_REFRESH_BRAND=replace;
+'use strict';
+const FULL='Surplus, Holdings, Indebtedness, Net Worth & Impairment';
+const translate=s=>String(s??'').replace(/Value\s*&?\s*Asset Stewardship Utility/gi,FULL).replace(/\bVASU\b/g,'SHINI').replace(/ChatGPT/gi,'AI tool');
+const filename=s=>String(s??'').replace(/VASU/gi,'SHINI').replace(/ChatGPT/gi,'AI');
+const excluded=el=>!!el?.closest?.('script,style,textarea,code,pre,[contenteditable="true"],#transactionsTable,.data-table tbody,.transaction-row,.merchant,.transaction-note,[data-user-content]');
+function translateDOM(){
+ document.title='SHINI — '+FULL;
+ document.querySelectorAll('input[placeholder],textarea[placeholder],[title],[aria-label]').forEach(el=>{for(const k of ['placeholder','title','aria-label']){const v=el.getAttribute(k);if(v&&/VASU|Value\s*&?\s*Asset Stewardship Utility|ChatGPT/i.test(v))el.setAttribute(k,translate(v))}});
+ const roots=document.querySelectorAll('.lock-card,.auth-card,.sidebar,.toolbar,.panel-head,.notice,.button-row,.vasu-bulk-hero,#page-bulk,#vasuCentralPanel,#vasuCentralAuthBox,#page-data,#page-settings');
+ roots.forEach(root=>{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(n){const p=n.parentElement;if(!p||excluded(p))return NodeFilter.FILTER_REJECT;return /VASU|Value\s*&?\s*Asset Stewardship Utility|ChatGPT/i.test(n.nodeValue||'')?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});const nodes=[];while(w.nextNode())nodes.push(w.currentNode);for(const n of nodes)n.nodeValue=translate(n.nodeValue)});
+}
+function wrapAfter(name){const f=window[name];if(typeof f!=='function'||f.__shiniBrand33)return;const g=function(...a){const r=f.apply(this,a);if(r&&typeof r.then==='function')return r.finally(()=>requestAnimationFrame(translateDOM));requestAnimationFrame(translateDOM);return r};g.__shiniBrand33=true;window[name]=g}
+function wrapMessage(name){const f=window[name];if(typeof f!=='function'||f.__shiniBrand33)return;const g=function(message,...rest){return f.call(this,translate(message),...rest)};g.__shiniBrand33=true;window[name]=g}
+function wrapDownload(){const f=window.downloadBlob;if(typeof f!=='function'||f.__shiniBrand33)return;const g=function(content,name,type,...rest){let c=content,n=filename(name);if(/(?:SHINI[_-]AI|Review[_ -]?Pack|Bulk[_ -]?Import[_ -]?Template)/i.test(n)&&typeof c==='string')c=translate(c);return f.call(this,c,n,type,...rest)};g.__shiniBrand33=true;window.downloadBlob=g}
+function refresh(){translateDOM();['showApp','showPage','renderAll','renderPageModule','openModal','showLock','vasuInjectCentralUI','vasuCentralOpen','vasuMigrateCurrentVault','vasuManualPull','vasuBulkImportFile','vasuInjectBulkUI','handleExchangeImport'].forEach(wrapAfter);['toast','alert','confirm','prompt'].forEach(wrapMessage);wrapDownload()}
+requestAnimationFrame(refresh);document.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(refresh),{once:true});
+(async()=>{try{const r=await fetch('/app/shini/shini-v32-controls.js',{cache:'no-store'});if(!r.ok)throw new Error('SHINI controls unavailable '+r.status);const t=(await r.text()).replace(/\s+/g,''),b=Uint8Array.from(atob(t),c=>c.charCodeAt(0));const js=await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('gzip'))).text();(0,eval)(js);requestAnimationFrame(refresh)}catch(e){console.error('SHINI controls load failed',e)}})();
+window.SHINI_REFRESH_BRAND=refresh;
 })();
