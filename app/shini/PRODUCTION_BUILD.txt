@@ -1,5 +1,5 @@
-SHINI v4.1.0 feature-hardening release candidate
+SHINI v4.2.0 structural-integrity release candidate
 Canonical route: /app/shini/
-Build source: shini-v41-transactions-loans-insights
-Purpose: transaction multi-filtering, visual analytics, loan/subscription intelligence, reminders, integrity diagnostics and post-import hardening.
-Production promotion only after QA and review.
+Build source: shini-v42-integrity-crud-imports
+Purpose: guarded CRUD, definition dependency remapping, separate delete authorization, transaction re-import tombstones, multi-domain structured imports, editable planning/master records, notification reconciliation, document/renewal metadata and device capability support.
+Production promotion only after syntax, state-invariant, browser smoke and pull-request checks pass.
