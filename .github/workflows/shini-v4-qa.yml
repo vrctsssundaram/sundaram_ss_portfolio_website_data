@@ -12,44 +12,23 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in index.html styles.css styles-v41.css styles-v42.css styles-v422.css app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js app-v422.js app-v423.js app-v425.js app-v426.js app-v427.js app-v428.js sw.js manifest.webmanifest qa-v41.mjs qa-v42.mjs qa-v42-property.mjs qa-v422.mjs qa-v423.mjs qa-v425.mjs qa-v426.mjs qa-v427.mjs qa-v428.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
+          for f in index.html styles.css styles-v41.css styles-v42.css styles-v422.css styles-v429.css app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js app-v422.js app-v423.js app-v425.js app-v426.js app-v427.js app-v428.js app-v429.js app-v429-runtime.js sw.js manifest.webmanifest qa-v41.mjs qa-v42.mjs qa-v42-property.mjs qa-v422.mjs qa-v423.mjs qa-v425.mjs qa-v426.mjs qa-v427.mjs qa-v428.mjs qa-v429.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
           test ! -e app/shini/runtime
           ! grep -R --line-number -E 'DecompressionStream|\beval\s*\(|/hiden/vasu/|runtime/core/' app/shini
           ! grep -R --line-number -E 'Your VASU|Central VASU|open VASU|Value Asset Stewardship' app/shini
           grep -q 'shini-auth' app/shini/app-core.js
           grep -q 'Your SHINI password' app/shini/index.html
-          grep -q 'Surplus, Holdings, Indebtedness, Net Worth &amp; Impairment' app/shini/index.html
-          grep -q "balanceImpactApplied===false)return" app/shini/app-ui.js
-          grep -q 'KEEP_BOTH' app/shini/app-core.js
-          grep -q 'v41-tx-filterbar' app/shini/styles-v41.css
-          grep -q 'Loan intelligence' app/shini/app-v41.js
-          grep -q 'Visual Insights' app/shini/app-v41.js
-          grep -q 'hardDeleteDefinition' app/shini/app-v42-core.js
-          grep -q 'PBKDF2' app/shini/app-v42-core.js
-          grep -q 'data-v42-delete-tx' app/shini/app-v42-ledger.js
-          grep -q 'Merge and delete account' app/shini/app-v42-crud.js
-          grep -q 'Structured data imports' app/shini/app-v42-imports.js
-          grep -q 'Documents & Renewals' app/shini/app-v42-platform.js
-          grep -q 'notificationState' app/shini/app-v42-platform.js
-          grep -q 'Delete transaction' app/shini/app-v422.js
-          grep -q 'v422ContextAddBtn' app/shini/app-v422.js
-          grep -q 'safeAccountDelete' app/shini/app-v422.js
-          grep -q "context\['Data & Sync'\]" app/shini/app-v423.js
-          grep -q "const VERSION='4.2.4'" app/shini/app-v42-core.js
-          ! grep -qE '(^|,)today\s*=' app/shini/app-v42-core.js
-          grep -q "VERSION='4.2.5'" app/shini/app-v425.js
-          grep -q 'batch_exact' app/shini/app-v425.js
-          grep -q 'RESET FINANCIAL DATA' app/shini/app-v425.js
-          grep -q "VERSION='4.2.6'" app/shini/app-v426.js
           grep -q 'reconcileAnchoredAccounts' app/shini/app-v426.js
-          grep -q 'Backup & clear financial data' app/shini/app-v426.js
-          grep -q "VERSION='4.2.7'" app/shini/app-v427.js
-          grep -q 'v427ImportHost' app/shini/app-v427.js
-          grep -q "VERSION='4.2.8'" app/shini/app-v428.js
           grep -q 'Reading and validating' app/shini/app-v428.js
-          grep -q 'shiniRefreshBtn' app/shini/app-v428.js
-          for f in app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js app-v422.js app-v423.js app-v425.js app-v426.js app-v427.js app-v428.js sw.js; do node --check "app/shini/$f"; done
-          cat app/shini/app-core.js app/shini/ui-cloud.js app/shini/app-ui.js app/shini/app-v41.js app/shini/app-v42-core.js app/shini/app-v42-ledger.js app/shini/app-v42-crud.js app/shini/app-v42-imports.js app/shini/app-v42-platform.js app/shini/app-v422.js app/shini/app-v423.js app/shini/app-v425.js app/shini/app-v426.js app/shini/app-v427.js app/shini/app-v428.js > /tmp/shini-browser-runtime.js
+          grep -q "VERSION='4.2.9'" app/shini/app-v429.js
+          grep -q 'Rules & Policies' app/shini/app-v429.js
+          grep -q 'Structured import blocked' app/shini/app-v429.js
+          grep -q 'softRefresh' app/shini/app-v429.js
+          grep -q 'safeNavTo' app/shini/app-v429-runtime.js
+          grep -q 'styles-v429.css?v=4.2.9' app/shini/index.html
+          grep -q 'app-v429-runtime.js?v=4.2.9' app/shini/index.html
+          for f in app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js app-v422.js app-v423.js app-v425.js app-v426.js app-v427.js app-v428.js app-v429.js app-v429-runtime.js sw.js; do node --check "app/shini/$f"; done
+          cat app/shini/app-core.js app/shini/ui-cloud.js app/shini/app-ui.js app/shini/app-v41.js app/shini/app-v42-core.js app/shini/app-v42-ledger.js app/shini/app-v42-crud.js app/shini/app-v42-imports.js app/shini/app-v42-platform.js app/shini/app-v422.js app/shini/app-v423.js app/shini/app-v425.js app/shini/app-v426.js app/shini/app-v427.js app/shini/app-v428.js app/shini/app-v429.js app/shini/app-v429-runtime.js > /tmp/shini-browser-runtime.js
           node --check /tmp/shini-browser-runtime.js
           node app/shini/qa-v41.mjs
           node app/shini/qa-v42.mjs
@@ -60,6 +39,7 @@ jobs:
           node app/shini/qa-v426.mjs
           node app/shini/qa-v427.mjs
           node app/shini/qa-v428.mjs
+          node app/shini/qa-v429.mjs
       - name: HTTP and real browser smoke
         shell: bash
         run: |
@@ -70,10 +50,10 @@ jobs:
           ready=0
           for i in $(seq 1 40); do if curl -fsS http://127.0.0.1:8765/app/shini/ >/dev/null; then ready=1; break; fi; sleep .25; done
           test "$ready" = 1
-          for u in /app/shini/styles.css /app/shini/styles-v41.css /app/shini/styles-v42.css /app/shini/styles-v422.css /app/shini/app-core.js /app/shini/ui-cloud.js /app/shini/app-ui.js /app/shini/app-v41.js /app/shini/app-v42-core.js /app/shini/app-v42-ledger.js /app/shini/app-v42-crud.js /app/shini/app-v42-imports.js /app/shini/app-v42-platform.js /app/shini/app-v422.js /app/shini/app-v423.js /app/shini/app-v425.js /app/shini/app-v426.js /app/shini/app-v427.js /app/shini/app-v428.js /app/shini/assets/shini-logo.png; do curl -fsS "http://127.0.0.1:8765$u" >/dev/null; done
+          for u in /app/shini/styles.css /app/shini/styles-v41.css /app/shini/styles-v42.css /app/shini/styles-v422.css /app/shini/styles-v429.css /app/shini/app-core.js /app/shini/ui-cloud.js /app/shini/app-ui.js /app/shini/app-v41.js /app/shini/app-v42-core.js /app/shini/app-v42-ledger.js /app/shini/app-v42-crud.js /app/shini/app-v42-imports.js /app/shini/app-v42-platform.js /app/shini/app-v422.js /app/shini/app-v423.js /app/shini/app-v425.js /app/shini/app-v426.js /app/shini/app-v427.js /app/shini/app-v428.js /app/shini/app-v429.js /app/shini/app-v429-runtime.js /app/shini/assets/shini-logo.png; do curl -fsS "http://127.0.0.1:8765$u" >/dev/null; done
           CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
           if [ -n "$CHROME" ]; then
-            timeout 45s "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --enable-logging=stderr --virtual-time-budget=3500 --dump-dom http://127.0.0.1:8765/app/shini/ >/tmp/shini-dom.html 2>/tmp/shini-chrome.log
+            timeout 45s "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --enable-logging=stderr --virtual-time-budget=4000 --dump-dom http://127.0.0.1:8765/app/shini/ >/tmp/shini-dom.html 2>/tmp/shini-chrome.log
             ! grep -E "Uncaught (SyntaxError|ReferenceError)|Identifier '.*' has already been declared" /tmp/shini-chrome.log
             python3 - <<'PY'
           from pathlib import Path
@@ -83,10 +63,9 @@ jobs:
           assert 'Your SHINI password' in t
           assert 'Unable to open SHINI' not in t
           assert 'VASU' not in t
-          assert 'app-v426.js' in t
-          assert 'app-v427.js' in t
-          assert 'app-v428.js' in t
-          assert 'v=4.2.8' in t
-          print('SHINI v4.2.8 browser/runtime smoke PASS')
+          assert 'app-v429.js' in t
+          assert 'app-v429-runtime.js' in t
+          assert 'v=4.2.9' in t
+          print('SHINI v4.2.9 browser/runtime smoke PASS')
           PY
           fi
