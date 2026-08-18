@@ -2,17 +2,25 @@
 (()=>{'use strict';
 const VERSION='4.2.7';
 const q=(s,r=document)=>r?.querySelector(s);
+globalThis.SHINI_RELEASE_BUILD=VERSION;
+function decorateAbout(){
+  const root=document.getElementById('pageRoot'),title=document.getElementById('pageTitle')?.textContent.trim();if(!root||title!=='About')return;
+  for(const card of root.querySelectorAll('.kpi-card')){const label=q('.label',card);if(label?.textContent.trim()==='SHINI release'){const value=q('.value',card);if(value)value.textContent=VERSION}}
+  for(const row of root.querySelectorAll('.metric-row')){const span=row.querySelector('span');if(span?.textContent.trim()==='Release'){const strong=row.querySelector('strong');if(strong)strong.textContent=VERSION}}
+}
 function decorateBulk(){
   const root=document.getElementById('pageRoot'),title=document.getElementById('pageTitle')?.textContent.trim();
   if(!root||title!=='Bulk Import')return;
+  // Explicitly invoke the structured-import enhancer. On some browsers the historical
+  // mutation-only lifecycle did not run until the transaction picker changed the DOM.
   try{if(typeof enhanceBulk==='function')enhanceBulk()}catch{}
-  const structured=q('.v42-bulk',root);
-  if(structured&&root.firstElementChild!==structured)root.insertBefore(structured,root.firstElementChild);
-  if(!q('#v427ImportGuide',root)){
-    const guide=document.createElement('article');guide.id='v427ImportGuide';guide.className='panel';guide.style.marginBottom='14px';
+  let guide=q('#v427ImportGuide',root);
+  if(!guide){
+    guide=document.createElement('article');guide.id='v427ImportGuide';guide.className='panel';guide.style.marginBottom='14px';
     guide.innerHTML='<div class="panel-head"><div><h2>Clean rebuild import order</h2><p>These are three different schemas. Import them through their matching controls; do not put category/account CSVs into the transaction statement picker.</p></div></div><div class="v42-info-grid"><div><strong>1 · Categories</strong><p>Use <b>Categories / classification definitions → Stage CSV</b>.</p></div><div><strong>2 · Account reconciliation anchors</strong><p>Use <b>Accounts / cards → Stage CSV</b>. This establishes opening and expected checkpoint balances.</p></div><div><strong>3 · Transactions</strong><p>Use <b>AI-assisted statement workflow → Choose SHINI CSV</b> only for the canonical transaction file.</p></div></div><div class="v42-danger-note">A Category Definitions CSV or Account Reconciliation Anchors CSV is not a transaction statement. Loading either into the transaction picker will correctly fail schema validation.</div>';
     root.insertBefore(guide,root.firstElementChild);
   }
+  const structured=q('.v42-bulk',root);if(structured&&guide.nextElementSibling!==structured)guide.insertAdjacentElement('afterend',structured);
   for(const h of root.querySelectorAll('h2')){
     if(/Bulk Import\s*\/\s*AI-assisted statement workflow/i.test(h.textContent||'')&&!h.dataset.v427){
       h.dataset.v427='1';h.textContent='Transactions only · AI-assisted statement workflow';
@@ -24,10 +32,10 @@ function decorateBulk(){
     mark('categories','STEP 1 · REBUILD PREREQUISITE');mark('accounts','STEP 2 · RECONCILIATION ANCHOR');
   }
 }
-let scheduled=false;function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;decorateBulk()})}
-const obs=new MutationObserver(schedule);obs.observe(document.documentElement,{subtree:true,childList:true});
-document.addEventListener('click',e=>{if(e.target.closest?.('[data-page="bulk"],[data-dock="bulk"]')){setTimeout(decorateBulk,0);setTimeout(decorateBulk,80)}},true);
-window.addEventListener('hashchange',()=>setTimeout(decorateBulk,0));
-setTimeout(decorateBulk,250);setTimeout(decorateBulk,900);
-globalThis.SHINIV427={VERSION,decorateBulk};
+let scheduled=false;function decorate(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;decorateBulk();decorateAbout()})}
+const obs=new MutationObserver(decorate);obs.observe(document.documentElement,{subtree:true,childList:true});
+document.addEventListener('click',e=>{if(e.target.closest?.('[data-page="bulk"],[data-dock="bulk"],[data-page="about"],[data-dock="about"]')){setTimeout(()=>{decorateBulk();decorateAbout()},0);setTimeout(()=>{decorateBulk();decorateAbout()},80)}},true);
+window.addEventListener('hashchange',()=>setTimeout(()=>{decorateBulk();decorateAbout()},0));
+setTimeout(()=>{decorateBulk();decorateAbout()},250);setTimeout(()=>{decorateBulk();decorateAbout()},900);
+globalThis.SHINIV427={VERSION,decorateBulk,decorateAbout};
 })();
