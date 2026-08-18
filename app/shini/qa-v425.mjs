@@ -5,8 +5,8 @@ const js=fs.readFileSync(new URL('./app-v425.js',import.meta.url),'utf8');
 const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
 const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
 for(const marker of ['hardenedStageCanonical','batch_exact','bankSourceKey','RESET FINANCIAL DATA','Reset financial data','tombstones:{transactions:{}}','nonOperatingInflow'])assert.ok(js.includes(marker),`missing v4.2.5 marker: ${marker}`);
-assert.ok(html.includes('app-v425.js?v=4.2.5'),'v4.2.5 runtime is not wired');
-assert.ok(sw.includes("shini-v425-static-1")&&sw.includes('app-v425.js?v=4.2.5'),'v4.2.5 service-worker cache not rotated');
+assert.ok(/app-v425\.js\?v=4\.2\.[5-9]/.test(html),'v4.2.5 runtime layer is not wired by the current release');
+assert.ok(/shini-v42[5-9]-static-1/.test(sw)&&/app-v425\.js\?v=4\.2\.[5-9]/.test(sw),'current service worker no longer includes the v4.2.5 runtime layer');
 
 const priorCommits=[];
 const ctx={
