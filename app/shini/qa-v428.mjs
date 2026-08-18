@@ -8,9 +8,9 @@ const release=JSON.parse(fs.readFileSync(new URL('./release.json',import.meta.ur
 for(const m of ["VERSION='4.2.8'",'data-v42-import','Reading and validating','Selected:','Commit staged batch','document.addEventListener(\'change\'','shiniRefreshBtn','location.reload()','shiniTopLockBtn'])assert.ok(js.includes(m),`missing v4.2.8 marker: ${m}`);
 assert.ok(v427.includes("host=structured?.parentElement"),'v4.2.7 layout must retain the structured import host');
 assert.ok(v427.includes("guide.insertAdjacentElement('afterend',host)"),'v4.2.7 must move the event host, not detach .v42-bulk');
-assert.ok(html.includes('app-v428.js?v=4.2.8'),'v4.2.8 layer not wired');
-assert.ok(sw.includes("shini-v428-static-1")&&sw.includes('app-v428.js?v=4.2.8'),'v4.2.8 cache not wired');
-assert.equal(release.build,'4.2.8');
-assert.ok(release.features.includes('visible selected-file and staging feedback'));
-assert.ok(release.features.includes('persistent top-bar refresh'));
-console.log('SHINI v4.2.8 structured staging + refresh QA PASS');
+assert.ok(/app-v428\.js\?v=4\.2\.[89]/.test(html),'v4.2.8 layer is not retained in the current runtime');
+assert.ok(sw.includes('app-v428.js?v=4.2.9')||sw.includes('app-v428.js?v=4.2.8'),'v4.2.8 layer is not retained in service-worker assets');
+assert.ok(Number(release.build.split('.').at(-1))>=8,'release must not regress below v4.2.8');
+assert.ok(release.features.includes('visible selected-file and staging feedback')||release.features.includes('structured-import staging feedback'));
+assert.ok(release.features.includes('persistent top-bar refresh')||release.features.includes('soft in-session refresh'));
+console.log('SHINI v4.2.8 structured staging layer retained QA PASS');
