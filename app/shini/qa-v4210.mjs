@@ -1,0 +1,31 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const js=fs.readFileSync(new URL('./app-v429.js',import.meta.url),'utf8');
+const v428=fs.readFileSync(new URL('./app-v428.js',import.meta.url),'utf8');
+const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
+const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
+const release=JSON.parse(fs.readFileSync(new URL('./release.json',import.meta.url),'utf8'));
+assert.equal(release.build,'4.2.10');
+assert.ok(js.includes("VERSION='4.2.10'"));
+assert.ok(js.includes('pill.textContent!==text'),'health text updates must be idempotent');
+assert.ok(js.includes("title==='Rules & Policies'&&!q('#v429Policies'"),'Rules & Policies observer must not re-render its own DOM endlessly');
+assert.ok(js.includes('v&&v.textContent!==release'),'About release update must be idempotent');
+assert.ok(v428.includes('globalThis.SHINI_RELEASE_BUILD||VERSION'),'prior About layer must follow the latest release owner');
+assert.ok(v428.includes('v&&v.textContent!==target'),'prior About observer must be idempotent');
+assert.ok(html.includes('app-v429.js?v=4.2.10'));
+assert.ok(sw.includes("shini-v4210-static-1"));
+
+let observerCb=null;const micro=[];let mutations=0;
+const healthPill={_text:'',title:'',dataset:{},classList:{toggle(){}},set textContent(v){if(this._text!==v){this._text=v;mutations++;if(observerCb)observerCb()}},get textContent(){return this._text}};
+const topActions={querySelector(sel){if(sel==='#shiniHealthPill')return healthPill;return null},insertBefore(){},firstChild:null};
+const pageTitle={textContent:'Overview'};
+const doc={documentElement:{},body:{appendChild(){}},addEventListener(){},getElementById(id){return id==='pageTitle'?pageTitle:null},querySelector(sel){if(sel==='#shiniHealthPill')return healthPill;if(sel==='.top-actions')return topActions;if(sel==='#pageTitle')return pageTitle;return null},querySelectorAll(){return[]},createElement(){return{dataset:{},classList:{toggle(){}},setAttribute(){}}}};
+const state={meta:{},transactions:[],accounts:[],categories:[],catalogs:{paymentMethods:[]}};
+const ctx={console,Date,Math,Number,String,Array,Object,Map,Set,RegExp,Error,Promise,JSON,Intl,Blob:class{},URL:{createObjectURL:()=>'',revokeObjectURL:()=>{}},CSS:{escape:x=>x},FormData:class{},confirm:()=>true,alert:()=>{},prompt:()=>'',location:{hash:'#dashboard'},navigator:{},window:{addEventListener(){}},document:doc,MutationObserver:class{constructor(cb){observerCb=cb}observe(){}},queueMicrotask:fn=>micro.push(fn),setTimeout:()=>0,clearTimeout:()=>{},activeTx:s=>s.transactions||[],filterPeriod:s=>s.transactions||[],periodRange:()=>({from:null,to:null}),getState:()=>state,save:async()=>true,requireDeleteCredential:async()=>true,toast:()=>{},canonicalToTx:(s,r)=>r,stageMasterImport:(s,k,rows)=>rows.map((r,i)=>({index:i+1,errors:[],old:null,action:'ADD'})),commitMasterImport:()=>({added:1,updated:0}),SHINIV426:{integrityReport:()=>({issues:[]})},globalThis:null};ctx.globalThis=ctx;
+vm.createContext(ctx);vm.runInContext(`const IMPORTS={};const NAV=[['dashboard','Overview'],['settings','Settings']];`,ctx);vm.runInContext(js,ctx);
+observerCb();let steps=0;while(micro.length&&steps<20){micro.shift()();steps++}
+assert.ok(steps<20,'MutationObserver feedback loop did not quiesce');
+assert.equal(healthPill.textContent,'✓ Data healthy');
+assert.equal(mutations,1,'health pill should mutate text once, not endlessly');
+console.log('SHINI v4.2.10 authenticated-render observer-loop QA PASS');
