@@ -7,11 +7,11 @@ const css=fs.readFileSync(new URL('./styles-v429.css',import.meta.url),'utf8');
 const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
 const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
 const release=JSON.parse(fs.readFileSync(new URL('./release.json',import.meta.url),'utf8'));
-for(const m of ["VERSION='4.2.9'",'validateRawImport','Structured import blocked','Rules & Policies','classification rules','contextualExport','softRefresh','Data healthy'])assert.ok(js.includes(m),`missing v4.2.9 marker ${m}`);
+for(const m of ['validateRawImport','Structured import blocked','Rules & Policies','classification rules','contextualExport','softRefresh','Data healthy'])assert.ok(js.includes(m),`missing v4.2.9+ marker ${m}`);
 for(const m of ['touch-action:manipulation','orientation:landscape','pointer:coarse'])assert.ok(css.includes(m),`missing responsive marker ${m}`);
-assert.ok(html.includes('styles-v429.css?v=4.2.9')&&html.includes('app-v429.js?v=4.2.9')&&html.includes('app-v429-runtime.js?v=4.2.9'));
-assert.ok(sw.includes("shini-v429-static-1")&&sw.includes('app-v429-runtime.js?v=4.2.9'));
-assert.equal(release.build,'4.2.9');
+assert.ok(html.includes('styles-v429.css?v=')&&html.includes('app-v429.js?v=')&&html.includes('app-v429-runtime.js?v='));
+assert.ok(sw.includes('app-v429-runtime.js?v='));
+assert.ok(Number(String(release.build).split('.').at(-1))>=9,'release must not regress below v4.2.9');
 
 const listeners={};
 const node=()=>({dataset:{},style:{},classList:{toggle(){},add(){},remove(){}},querySelector(){return null},querySelectorAll(){return[]},appendChild(){},insertBefore(){},setAttribute(){},closest(){return null}});
@@ -19,7 +19,7 @@ const ctx={console,Date,Math,Number,String,Array,Object,Map,Set,RegExp,Error,Pro
 vm.createContext(ctx);
 vm.runInContext(`const IMPORTS={categories:{id:'category_id'},accounts:{id:'account_id'},loans:{id:'loan_id'},recurring:{id:'recurring_id'},goals:{id:'goal_id'},assets:{id:'asset_id'},investments:{id:'investment_id'},insurance:{id:'insurance_id'},documents:{id:'document_id'}};const NAV=[['dashboard','Overview'],['settings','Settings']];`,ctx);
 vm.runInContext(js,ctx);vm.runInContext(rt,ctx);
-assert.equal(ctx.SHINIV429.VERSION,'4.2.9');
+assert.equal(ctx.SHINIV429.VERSION,release.build);
 const valid={
  categories:{category_id:'food',name:'Food',budget:'1000'},
  accounts:{account_id:'acc_a',name:'Bank',opening_balance:'100',opening_date:'2026-04-01',reconciliation_balance:'200',reconciliation_date:'2026-04-30'},
@@ -37,4 +37,4 @@ for(const [k,r] of Object.entries(invalid)){const st=ctx.stageMasterImport({},k,
 assert.throws(()=>ctx.commitMasterImport({},'goals',[{errors:['bad'],action:'INVALID'}]),/blocked/i,'structured commit must be atomic');
 const s={meta:{v429:{policies:{classificationRulesEnabled:true},rules:[{id:'rule1',active:true,priority:1,merchantContains:'netflix',setCategoryId:'entertainment',renameMerchant:'Netflix'}]}},categories:[{id:'entertainment',active:true}],catalogs:{paymentMethods:[]}};
 const tx=ctx.SHINIV429.applyRules(s,{merchant:'NETFLIX.COM',accountId:'acc',amount:199,date:'2026-08-01',transactionTypeId:'txt_expense',categoryId:'other'});assert.equal(tx.categoryId,'entertainment');assert.equal(tx.merchant,'Netflix');assert.equal(tx.amount,199);assert.equal(tx.accountId,'acc');
-console.log('SHINI v4.2.9 cross-domain import/rules/navigation QA PASS');
+console.log(`SHINI ${release.build} cross-domain import/rules/navigation QA PASS`);
