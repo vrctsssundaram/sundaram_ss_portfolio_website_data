@@ -36,12 +36,13 @@ const document={readyState:'loading',documentElement:new E(),scripts,visibilityS
  querySelectorAll:s=>s==='link[href]'?[{href:'https://example.test/app/shini/styles.css?v=4.2.12'}]:[],
  createElement:()=>new E(),addEventListener:(n,cb)=>{if(n==='DOMContentLoaded')domReady=cb}};
 const location={pathname:'/app/shini/',search:'',hash:'#about',href:'https://example.test/app/shini/#about',reload(){}};
-const sessionStore=new Map;
+const sessionStore=new Map,winListeners={};
 const ctx={console,Date,Math,Number,String,Array,Object,Map,Set,RegExp,Error,Promise,JSON,URL,Element:E,document,location,
  history:{replaceState(a,b,u){location.hash='#'+u.split('#').at(-1)}},navigator:{},window:null,
  sessionStorage:{getItem:k=>sessionStore.get(k)||null,setItem:(k,v)=>sessionStore.set(k,v),removeItem:k=>sessionStore.delete(k)},
  caches:{keys:async()=>[],delete:async()=>true},fetch:async()=>({ok:true,json:async()=>({build:'4.2.12'})}),
- MutationObserver:class{constructor(){}observe(){}},setTimeout:()=>0,queueMicrotask:()=>{},isUnlocked:()=>false,globalThis:null};ctx.globalThis=ctx;ctx.window=ctx;
+ MutationObserver:class{constructor(){}observe(){}},setTimeout:()=>0,queueMicrotask:()=>{},isUnlocked:()=>false,globalThis:null};
+ctx.globalThis=ctx;ctx.window=ctx;ctx.addEventListener=(n,cb)=>{winListeners[n]=cb};
 vm.createContext(ctx);vm.runInContext(js,ctx);
 const A=ctx.SHINIV4212;assert.equal(A.VERSION,'4.2.12');
 
