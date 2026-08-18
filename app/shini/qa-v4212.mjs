@@ -54,5 +54,5 @@ notify.innerHTML='Notifications <span class="v41-badge">2</span>';
 assert.equal(nativeWrites,0,'same notification badge markup must not create another mutation');
 notify.innerHTML='Notifications <span class="v41-badge">3</span>';
 assert.equal(nativeWrites,1,'real badge changes must still render');
-assert.deepEqual(A.assetVersions(),['4.2.12']);
+assert.equal(A.assetVersions().join(','),'4.2.12');
 console.log('SHINI v4.2.12 observer/cache/first-paint QA PASS');
