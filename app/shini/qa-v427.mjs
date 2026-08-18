@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const js=fs.readFileSync(new URL('./app-v427.js',import.meta.url),'utf8');
+const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
+const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
+const release=JSON.parse(fs.readFileSync(new URL('./release.json',import.meta.url),'utf8'));
+for(const marker of ["VERSION='4.2.7'",'Clean rebuild import order','Categories / classification definitions','Account reconciliation anchors','Transactions only · AI-assisted statement workflow','typeof enhanceBulk','data-page="bulk"'])assert.ok(js.includes(marker),`missing v4.2.7 marker: ${marker}`);
+assert.ok(html.includes('app-v427.js?v=4.2.7'),'v4.2.7 lifecycle layer not wired');
+assert.ok(sw.includes("shini-v427-static-1")&&sw.includes('app-v427.js?v=4.2.7'),'v4.2.7 cache not wired');
+assert.equal(release.build,'4.2.7');
+assert.ok(js.indexOf('typeof enhanceBulk')<js.indexOf('Clean rebuild import order'),'structured enhancer must be invoked before the rebuild guide is decorated');
+console.log('SHINI v4.2.7 immediate bulk-import lifecycle QA PASS');

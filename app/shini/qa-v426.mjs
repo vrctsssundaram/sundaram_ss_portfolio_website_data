@@ -5,8 +5,8 @@ const js=fs.readFileSync(new URL('./app-v426.js',import.meta.url),'utf8');
 const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
 const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
 for(const m of ['atomic','reconcileAnchoredAccounts','ledgerBalance','reconciliationExpectedBalance','Backup & clear financial data','About','Categories / classification definitions'])assert.ok(js.includes(m),`missing marker ${m}`);
-assert.ok(html.includes('app-v426.js?v=4.2.6')&&html.includes('v=4.2.6'),'v4.2.6 not wired');
-assert.ok(sw.includes("shini-v426-static-1")&&sw.includes('app-v426.js?v=4.2.6'),'v4.2.6 cache not wired');
+assert.ok(/app-v426\.js\?v=\d+\.\d+\.\d+/.test(html),'v4.2.6 reconciliation layer is not wired into the current release');
+assert.ok(/app-v426\.js\?v=\d+\.\d+\.\d+/.test(sw),'v4.2.6 reconciliation layer is not cached by the current service worker');
 const listeners={};
 const ctx={
  console,Date,Math,Number,String,Array,Object,Map,Set,RegExp,Error,Promise,JSON,Intl,Blob:class{},URL:{createObjectURL:()=>'',revokeObjectURL:()=>{}},
