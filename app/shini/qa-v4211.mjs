@@ -6,11 +6,11 @@ const cloud=fs.readFileSync(new URL('./ui-cloud.js',import.meta.url),'utf8');
 const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
 const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
 const release=JSON.parse(fs.readFileSync(new URL('./release.json',import.meta.url),'utf8'));
-assert.equal(release.build,'4.2.11');
+assert.ok(Number(String(release.build).split('.').at(-1))>=11,'release must not regress below v4.2.11');
 for(const m of ["VERSION='4.2.11'",'authFlight','vaultFlight','loginBusy','pageshow','visibilitychange','preventWhiteScreen','Unhandled browser promise rejection'])assert.ok(js.includes(m),`missing v4.2.11 marker ${m}`);
 for(const m of ['fetchTimed','AbortController','Authentication service is temporarily unavailable','Encrypted vault download','globalThis.SHINI_RELEASE_BUILD||BUILD'])assert.ok(cloud.includes(m),`missing hardened cloud marker ${m}`);
-assert.ok(html.includes('app-v4211.js?v=4.2.11'));
-assert.ok(sw.includes("shini-v4211-static-1")&&sw.includes('app-v4211.js?v=4.2.11'));
+assert.ok(html.includes('app-v4211.js?v='));
+assert.ok(sw.includes('app-v4211.js?v='));
 
 const listeners={};
 class CL{constructor(hidden=false){this.s=new Set(hidden?['hidden']:[])}add(x){this.s.add(x)}remove(x){this.s.delete(x)}contains(x){return this.s.has(x)}toggle(x,on){on?this.s.add(x):this.s.delete(x)}}
@@ -38,10 +38,8 @@ assert.equal(vaultCalls,1,'rapid duplicate submit must open vault once');
 assert.equal(elements.app.classList.contains('hidden'),false,'successful login must leave app visible');
 assert.equal(elements.authScreen.classList.contains('hidden'),true,'successful login must hide auth screen');
 
-// A locked/bfcache page with all roots hidden must recover to a visible login instead of white screen.
 unlocked=false;for(const id of ['boot','authScreen','app'])elements[id].classList.add('hidden');ctx.SHINIV4211.preventWhiteScreen('test-locked');
 assert.equal(elements.authScreen.classList.contains('hidden'),false,'locked all-hidden state must recover to auth screen');
-// An unlocked all-hidden state must recover the app shell.
 unlocked=true;for(const id of ['boot','authScreen','app'])elements[id].classList.add('hidden');ctx.SHINIV4211.preventWhiteScreen('test-unlocked');
 assert.equal(elements.app.classList.contains('hidden'),false,'unlocked all-hidden state must recover app shell');
-console.log('SHINI v4.2.11 single-flight login/lifecycle recovery QA PASS');
+console.log(`SHINI ${release.build} retains v4.2.11 single-flight login/lifecycle recovery QA PASS`);

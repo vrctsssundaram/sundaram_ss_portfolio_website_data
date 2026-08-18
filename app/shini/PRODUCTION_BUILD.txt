@@ -1,5 +1,6 @@
-SHINI v4.2.5 import-integrity release candidate
+SHINI v4.2.12 authentication/observer/cache reliability release candidate
 Canonical route: /app/shini/
-Build source: shini-v425-import-integrity-reset
-Purpose: make overlapping statement imports idempotent by default, suppress exact/within-batch/source-reference duplicates even when CSV says ADD, and provide a credential-gated clean financial-data reset for controlled full-history reconstruction.
-Production promotion only after individual syntax, combined classic-script syntax, invariant/property, contextual CRUD, import-idempotency and real-browser runtime checks pass.
+Build source: shini-v4212-final-login-observer-cache-hardening
+Purpose: preserve the v4.2.11 single-flight auth and iOS lifecycle fixes while eliminating remaining legacy observer self-churn, forcing a stable dashboard first paint, detecting mixed deployed/cached assets, and providing SHINI-only PWA cache repair without touching the encrypted vault.
+Cloud safety: current encrypted vault revision 114 was backed up before this diagnostic/repair cycle; no financial reset or credential migration is required.
+Production promotion only after all historical ledger/import/CRUD invariants plus v4.2.10, v4.2.11 and v4.2.12 login/lifecycle/browser gates pass.

@@ -5,8 +5,9 @@ const q=(s,r=document)=>r?.querySelector(s);
 globalThis.SHINI_RELEASE_BUILD=VERSION;
 function decorateAbout(){
   const root=document.getElementById('pageRoot'),title=document.getElementById('pageTitle')?.textContent.trim();if(!root||title!=='About')return;
-  for(const card of root.querySelectorAll('.kpi-card')){const label=q('.label',card);if(label?.textContent.trim()==='SHINI release'){const value=q('.value',card);if(value)value.textContent=globalThis.SHINI_RELEASE_BUILD||VERSION}}
-  for(const row of root.querySelectorAll('.metric-row')){const span=row.querySelector('span');if(span?.textContent.trim()==='Release'){const strong=row.querySelector('strong');if(strong)strong.textContent=globalThis.SHINI_RELEASE_BUILD||VERSION}}
+  const release=globalThis.SHINI_RELEASE_BUILD||VERSION;
+  for(const card of root.querySelectorAll('.kpi-card')){const label=q('.label',card);if(label?.textContent.trim()==='SHINI release'){const value=q('.value',card);if(value&&value.textContent!==release)value.textContent=release}}
+  for(const row of root.querySelectorAll('.metric-row')){const span=row.querySelector('span');if(span?.textContent.trim()==='Release'){const strong=row.querySelector('strong');if(strong&&strong.textContent!==release)strong.textContent=release}}
 }
 function decorateBulk(){
   const root=document.getElementById('pageRoot'),title=document.getElementById('pageTitle')?.textContent.trim();
