@@ -6,14 +6,9 @@ const n=v=>Number.isFinite(Number(v))?Number(v):0;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const cash=(s,v)=>{try{return money(s,v)}catch{return `₹${n(v).toLocaleString('en-IN',{maximumFractionDigits:2})}`}};
 
-// The base clean-room runtime still exposes its schema-era BUILD constant (4.0.1).
-// Release/status UI uses this explicit release version so deployment status is not misleading.
 globalThis.SHINI_RELEASE_BUILD=REL;
 if(Array.isArray(NAV)&&!NAV.some(x=>x[0]==='about')){const i=Math.max(0,NAV.findIndex(x=>x[0]==='settings'));NAV.splice(i<0?NAV.length:i,0,['about','About'])}
 
-// Structured master-data support needed by statement imports. A bank statement CSV may
-// reference categories that do not yet exist; definitions must be provisioned before the
-// transaction batch is allowed to commit.
 if(typeof IMPORTS==='object'){
   IMPORTS.categories={label:'Categories / classification definitions',id:'category_id',target:'categories',fields:['category_id','name','group','budget','essential','character','budget_class','active']};
   const af=IMPORTS.accounts?.fields||[];for(const f of['opening_balance','opening_date','reconciliation_balance','reconciliation_date'])if(!af.includes(f))af.push(f);
@@ -65,13 +60,8 @@ function integrityReport(s){
   return{issues,warn,reconciliations:rec};
 }
 
-// Derived bank balances are repaired before every cloud save. This removes mutable-balance
-// drift: repeated imports, edits or prior partial state can no longer permanently desynchronize
-// an anchored bank account from its ledger.
 if(typeof save==='function'&&!save.__v426){const prior=save,wrapped=async function(opt){const s=typeof getState==='function'?getState():null;if(s)reconcileAnchoredAccounts(s);return prior(opt)};wrapped.__v426=true;save=wrapped;globalThis.save=wrapped}
 
-// Canonical transaction import is atomic from the user interface. Never allow a partially
-// invalid bank statement batch to commit; that is how one-sided credits/debits caused drift.
 document.addEventListener('click',e=>{
   const b=e.target.closest?.('#commitImport');if(!b)return;
   const host=document.getElementById('bulkStage'),text=String(host?.textContent||'').toLowerCase();
@@ -83,31 +73,31 @@ async function backupAndClear(){
   const s=typeof getState==='function'?getState():null;if(!s)return;
   if(typeof requireDeleteCredential!=='function'||!await requireDeleteCredential(s,'Export a readable backup, then clear all financial records and reset account balances?'))return;
   const phrase=prompt('Type BACKUP AND CLEAR to continue:');if(phrase!=='BACKUP AND CLEAR'){try{toast('Clear cancelled')}catch{}return}
-  downloadJson(`SHINI_backup_before_clear_${new Date().toISOString().slice(0,10)}.json`,{product:'SHINI',release:REL,revision:typeof getRevision==='function'?getRevision():null,exportedAt:new Date().toISOString(),state:s});
+  downloadJson(`SHINI_backup_before_clear_${new Date().toISOString().slice(0,10)}.json`,{product:'SHINI',release:globalThis.SHINI_RELEASE_BUILD||REL,revision:typeof getRevision==='function'?getRevision():null,exportedAt:new Date().toISOString(),state:s});
   const keep={settings:s.settings,catalogs:s.catalogs,categories:s.categories,accounts:s.accounts.map(a=>({...a,balance:0,openingBalance:'',openingDate:'',reconciliationExpectedBalance:'',reconciliationDate:'',balanceMode:''})),metaDeleteAuth:s.meta?.v42?.deleteAuth||null,createdAt:s.createdAt};
   for(const k of['transactions','recurring','debts','goals','assets','investments','insurance','documents','revisions','snapshots','decisions','checkins'])s[k]=[];
   if(s.creditProfile)s.creditProfile.history=[];s.settings=keep.settings;s.catalogs=keep.catalogs;s.categories=keep.categories;s.accounts=keep.accounts;s.createdAt=keep.createdAt;s.updatedAt=new Date().toISOString();s.meta={v42:{schema:2,deleteAuth:keep.metaDeleteAuth,tombstones:{transactions:{}},notificationState:{},importLog:[],audit:[]},lastImportAt:''};
-  try{auditEvent(s,'backup_clear','financial_data','all',{release:REL})}catch{}
+  try{auditEvent(s,'backup_clear','financial_data','all',{release:globalThis.SHINI_RELEASE_BUILD||REL})}catch{}
   await save({force:true});try{toast('Backup downloaded and financial data cleared.')}catch{}setTimeout(()=>location.reload(),700);
 }
 
 function aboutHtml(s){
   const rep=integrityReport(s),tx=s.transactions||[],dates=tx.map(t=>t.date).filter(Boolean).sort(),login=typeof getLogin==='function'?getLogin():'',rev=typeof getRevision==='function'?getRevision():'—';
-  const status=rep.issues.length?'Attention required':'Healthy';
-  return `<div class="grid kpi"><article class="card kpi-card"><div class="label">SHINI release</div><div class="value">${REL}</div><div class="sub">Base schema runtime ${typeof BUILD!=='undefined'?BUILD:'—'}</div></article><article class="card kpi-card"><div class="label">Vault revision</div><div class="value">${esc(rev)}</div><div class="sub">Central encrypted vault</div></article><article class="card kpi-card"><div class="label">Integrity status</div><div class="value">${esc(status)}</div><div class="sub">${rep.issues.length} blocking finding(s)</div></article><article class="card kpi-card"><div class="label">Transactions</div><div class="value">${tx.length}</div><div class="sub">${dates.length?`${dates[0]} → ${dates.at(-1)}`:'No ledger data'}</div></article></div>
+  const status=rep.issues.length?'Attention required':'Healthy',release=globalThis.SHINI_RELEASE_BUILD||REL;
+  return `<div class="grid kpi"><article class="card kpi-card"><div class="label">SHINI release</div><div class="value">${esc(release)}</div><div class="sub">Base schema runtime ${typeof BUILD!=='undefined'?BUILD:'—'}</div></article><article class="card kpi-card"><div class="label">Vault revision</div><div class="value">${esc(rev)}</div><div class="sub">Central encrypted vault</div></article><article class="card kpi-card"><div class="label">Integrity status</div><div class="value">${esc(status)}</div><div class="sub">${rep.issues.length} blocking finding(s)</div></article><article class="card kpi-card"><div class="label">Transactions</div><div class="value">${tx.length}</div><div class="sub">${dates.length?`${dates[0]} → ${dates.at(-1)}`:'No ledger data'}</div></article></div>
   <div class="grid two" style="margin-top:14px"><article class="panel"><div class="panel-head"><div><h2>About you</h2><p>Private profile information stored in this encrypted SHINI vault.</p></div></div><div class="metric-list"><div class="metric-row"><span>Profile</span><strong>${esc(s.settings?.profileName||'Personal')}</strong></div><div class="metric-row"><span>SHINI login</span><strong>${esc(login||'—')}</strong></div><div class="metric-row"><span>Currency</span><strong>${esc(s.settings?.currency||'INR')}</strong></div><div class="metric-row"><span>Vault created</span><strong>${esc(s.createdAt||'—')}</strong></div><div class="metric-row"><span>Last modified</span><strong>${esc(s.updatedAt||'—')}</strong></div></div></article>
-  <article class="panel"><div class="panel-head"><div><h2>System status</h2><p>Deployment, browser and synchronization context.</p></div></div><div class="metric-list"><div class="metric-row"><span>Product</span><strong>SHINI</strong></div><div class="metric-row"><span>Release</span><strong>${REL}</strong></div><div class="metric-row"><span>Route</span><strong>/app/shini/</strong></div><div class="metric-row"><span>Online</span><strong>${navigator.onLine?'Yes':'No'}</strong></div><div class="metric-row"><span>Service worker</span><strong>${'serviceWorker'in navigator?'Supported':'Unavailable'}</strong></div><div class="metric-row"><span>Web Crypto</span><strong>${crypto?.subtle?'Supported':'Unavailable'}</strong></div><div class="metric-row"><span>Notifications</span><strong>${'Notification'in window?Notification.permission:'Unavailable'}</strong></div></div></article></div>
+  <article class="panel"><div class="panel-head"><div><h2>System status</h2><p>Deployment, browser and synchronization context.</p></div></div><div class="metric-list"><div class="metric-row"><span>Product</span><strong>SHINI</strong></div><div class="metric-row"><span>Release</span><strong>${esc(release)}</strong></div><div class="metric-row"><span>Route</span><strong>/app/shini/</strong></div><div class="metric-row"><span>Online</span><strong>${navigator.onLine?'Yes':'No'}</strong></div><div class="metric-row"><span>Service worker</span><strong>${'serviceWorker'in navigator?'Supported':'Unavailable'}</strong></div><div class="metric-row"><span>Web Crypto</span><strong>${crypto?.subtle?'Supported':'Unavailable'}</strong></div><div class="metric-row"><span>Notifications</span><strong>${'Notification'in window?Notification.permission:'Unavailable'}</strong></div></div></article></div>
   <article class="panel" style="margin-top:14px"><div class="panel-head"><div><h2>Account reconciliation</h2><p>Anchored balances are derived from opening balance + ledger, not trusted as mutable counters.</p></div></div>${rep.reconciliations.length?`<div class="table-wrap"><table><thead><tr><th>Account</th><th>Opening</th><th>Derived current</th><th>Expected checkpoint</th><th>Delta</th></tr></thead><tbody>${rep.reconciliations.map(r=>`<tr><td>${esc(r.name||r.id)}</td><td>${cash(s,r.opening)}${r.openingDate?` · ${esc(r.openingDate)}`:''}</td><td>${cash(s,r.derived)}</td><td>${r.expected===null?'—':cash(s,r.expected)}${r.reconciliationDate?` · ${esc(r.reconciliationDate)}`:''}</td><td class="${r.delta!==null&&Math.abs(r.delta)>.005?'negative':'positive'}">${r.delta===null?'—':cash(s,r.delta)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No ledger-reconciliation anchors configured yet.</div>'}</article>
   <article class="panel" style="margin-top:14px"><div class="panel-head"><div><h2>Integrity findings</h2><p>Blocking mismatches are never hidden or clamped to zero.</p></div></div>${rep.issues.length?`<div class="metric-list">${rep.issues.slice(0,100).map(x=>`<div class="metric-row"><span class="negative">${esc(x)}</span></div>`).join('')}</div>`:'<div class="empty positive">No blocking ledger/reference findings.</div>'}${rep.warn.length?`<div class="metric-list">${rep.warn.map(x=>`<div class="metric-row"><span>${esc(x)}</span></div>`).join('')}</div>`:''}</article>`;
 }
 function enhance(){
   const s=typeof getState==='function'?getState():null,root=document.getElementById('pageRoot'),title=document.getElementById('pageTitle')?.textContent.trim();if(!s||!root)return;
-  reconcileAnchoredAccounts(s);
   if(title==='About'&&!q('#v426About',root)){root.innerHTML=`<div id="v426About">${aboutHtml(s)}</div>`}
   if(title==='Data & Sync'&&!q('#v426BackupClear',root)){
     const p=document.createElement('article');p.id='v426BackupClear';p.className='panel';p.style.marginTop='14px';p.innerHTML='<div class="panel-head"><div><h2>Backup & clear financial data</h2><p>Download a readable JSON backup, then clear all financial records and reset balances while preserving your login, master definitions/categories, account identities and deletion credential.</p></div></div><div class="button-row"><button class="danger" id="v426BackupClearBtn">Backup & clear financial data</button></div><p class="tiny muted">This does not delete your Supabase authentication account or the encrypted-vault container itself; it clears the financial contents safely so SHINI can still open.</p>';root.appendChild(p);q('#v426BackupClearBtn',p).onclick=backupAndClear;
   }
 }
-const obs=new MutationObserver(()=>queueMicrotask(enhance));obs.observe(document.documentElement,{subtree:true,childList:true});window.addEventListener('hashchange',()=>setTimeout(enhance,0));setTimeout(enhance,400);
+let enhancePending=false;function scheduleEnhance(){if(enhancePending)return;enhancePending=true;const run=()=>{enhancePending=false;enhance()};if(typeof requestAnimationFrame==='function')requestAnimationFrame(run);else setTimeout(run,0)}
+const observeRoot=document.getElementById('pageRoot')||document.documentElement;const obs=new MutationObserver(scheduleEnhance);obs.observe(observeRoot,{subtree:true,childList:true});window.addEventListener('hashchange',()=>setTimeout(enhance,0));setTimeout(enhance,400);
 globalThis.SHINIV426={VERSION,REL,ledgerBalance,reconcileAnchoredAccounts,integrityReport,backupAndClear};
 })();
