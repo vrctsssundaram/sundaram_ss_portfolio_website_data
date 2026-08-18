@@ -12,7 +12,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in index.html styles.css styles-v41.css styles-v42.css styles-v422.css styles-v429.css app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js app-v422.js app-v423.js app-v425.js app-v426.js app-v427.js app-v428.js app-v429.js app-v429-runtime.js sw.js manifest.webmanifest qa-v41.mjs qa-v42.mjs qa-v42-property.mjs qa-v422.mjs qa-v423.mjs qa-v425.mjs qa-v426.mjs qa-v427.mjs qa-v428.mjs qa-v429.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
+          for f in index.html styles.css styles-v41.css styles-v42.css styles-v422.css styles-v429.css app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js app-v422.js app-v423.js app-v425.js app-v426.js app-v427.js app-v428.js app-v429.js app-v429-runtime.js sw.js manifest.webmanifest qa-v41.mjs qa-v42.mjs qa-v42-property.mjs qa-v422.mjs qa-v423.mjs qa-v425.mjs qa-v426.mjs qa-v427.mjs qa-v428.mjs qa-v429.mjs qa-v4210.mjs assets/shini-logo.png; do test -f "app/shini/$f"; done
           test ! -e app/shini/runtime
           ! grep -R --line-number -E 'DecompressionStream|\beval\s*\(|/hiden/vasu/|runtime/core/' app/shini
           ! grep -R --line-number -E 'Your VASU|Central VASU|open VASU|Value Asset Stewardship' app/shini
@@ -20,13 +20,13 @@ jobs:
           grep -q 'Your SHINI password' app/shini/index.html
           grep -q 'reconcileAnchoredAccounts' app/shini/app-v426.js
           grep -q 'Reading and validating' app/shini/app-v428.js
-          grep -q "VERSION='4.2.9'" app/shini/app-v429.js
-          grep -q 'Rules & Policies' app/shini/app-v429.js
-          grep -q 'Structured import blocked' app/shini/app-v429.js
-          grep -q 'softRefresh' app/shini/app-v429.js
+          grep -q "VERSION='4.2.10'" app/shini/app-v429.js
+          grep -q 'pill.textContent!==text' app/shini/app-v429.js
+          grep -q "Rules & Policies'&&!q('#v429Policies'" app/shini/app-v429.js
+          grep -q 'globalThis.SHINI_RELEASE_BUILD||VERSION' app/shini/app-v428.js
           grep -q 'safeNavTo' app/shini/app-v429-runtime.js
-          grep -q 'styles-v429.css?v=4.2.9' app/shini/index.html
-          grep -q 'app-v429-runtime.js?v=4.2.9' app/shini/index.html
+          grep -q 'styles-v429.css?v=4.2.10' app/shini/index.html
+          grep -q 'app-v429-runtime.js?v=4.2.10' app/shini/index.html
           for f in app-core.js ui-cloud.js app-ui.js app-v41.js app-v42-core.js app-v42-ledger.js app-v42-crud.js app-v42-imports.js app-v42-platform.js app-v422.js app-v423.js app-v425.js app-v426.js app-v427.js app-v428.js app-v429.js app-v429-runtime.js sw.js; do node --check "app/shini/$f"; done
           cat app/shini/app-core.js app/shini/ui-cloud.js app/shini/app-ui.js app/shini/app-v41.js app/shini/app-v42-core.js app/shini/app-v42-ledger.js app/shini/app-v42-crud.js app/shini/app-v42-imports.js app/shini/app-v42-platform.js app/shini/app-v422.js app/shini/app-v423.js app/shini/app-v425.js app/shini/app-v426.js app/shini/app-v427.js app/shini/app-v428.js app/shini/app-v429.js app/shini/app-v429-runtime.js > /tmp/shini-browser-runtime.js
           node --check /tmp/shini-browser-runtime.js
@@ -40,6 +40,7 @@ jobs:
           node app/shini/qa-v427.mjs
           node app/shini/qa-v428.mjs
           node app/shini/qa-v429.mjs
+          node app/shini/qa-v4210.mjs
       - name: HTTP and real browser smoke
         shell: bash
         run: |
@@ -65,7 +66,7 @@ jobs:
           assert 'VASU' not in t
           assert 'app-v429.js' in t
           assert 'app-v429-runtime.js' in t
-          assert 'v=4.2.9' in t
-          print('SHINI v4.2.9 browser/runtime smoke PASS')
+          assert 'v=4.2.10' in t
+          print('SHINI v4.2.10 browser/runtime smoke PASS')
           PY
           fi
