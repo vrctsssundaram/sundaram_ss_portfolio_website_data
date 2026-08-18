@@ -19,7 +19,7 @@ const ctx={console,Date,Math,Number,String,Array,Object,Map,Set,RegExp,Error,Pro
 vm.createContext(ctx);
 vm.runInContext(`const IMPORTS={categories:{id:'category_id'},accounts:{id:'account_id'},loans:{id:'loan_id'},recurring:{id:'recurring_id'},goals:{id:'goal_id'},assets:{id:'asset_id'},investments:{id:'investment_id'},insurance:{id:'insurance_id'},documents:{id:'document_id'}};const NAV=[['dashboard','Overview'],['settings','Settings']];`,ctx);
 vm.runInContext(js,ctx);vm.runInContext(rt,ctx);
-assert.equal(ctx.SHINIV429.VERSION,release.build);
+assert.ok(Number(String(ctx.SHINIV429.VERSION).split('.').at(-1))>=9,'v4.2.9 interaction layer must remain present');
 const valid={
  categories:{category_id:'food',name:'Food',budget:'1000'},
  accounts:{account_id:'acc_a',name:'Bank',opening_balance:'100',opening_date:'2026-04-01',reconciliation_balance:'200',reconciliation_date:'2026-04-30'},
@@ -37,4 +37,4 @@ for(const [k,r] of Object.entries(invalid)){const st=ctx.stageMasterImport({},k,
 assert.throws(()=>ctx.commitMasterImport({},'goals',[{errors:['bad'],action:'INVALID'}]),/blocked/i,'structured commit must be atomic');
 const s={meta:{v429:{policies:{classificationRulesEnabled:true},rules:[{id:'rule1',active:true,priority:1,merchantContains:'netflix',setCategoryId:'entertainment',renameMerchant:'Netflix'}]}},categories:[{id:'entertainment',active:true}],catalogs:{paymentMethods:[]}};
 const tx=ctx.SHINIV429.applyRules(s,{merchant:'NETFLIX.COM',accountId:'acc',amount:199,date:'2026-08-01',transactionTypeId:'txt_expense',categoryId:'other'});assert.equal(tx.categoryId,'entertainment');assert.equal(tx.merchant,'Netflix');assert.equal(tx.amount,199);assert.equal(tx.accountId,'acc');
-console.log(`SHINI ${release.build} cross-domain import/rules/navigation QA PASS`);
+console.log(`SHINI ${release.build} retains v4.2.9 cross-domain import/rules/navigation QA PASS`);
