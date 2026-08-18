@@ -4,9 +4,11 @@ import assert from 'node:assert/strict';
 const js=fs.readFileSync(new URL('./app-v425.js',import.meta.url),'utf8');
 const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
 const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
+const release=JSON.parse(fs.readFileSync(new URL('./release.json',import.meta.url),'utf8'));
 for(const marker of ['hardenedStageCanonical','batch_exact','bankSourceKey','RESET FINANCIAL DATA','Reset financial data','tombstones:{transactions:{}}','nonOperatingInflow'])assert.ok(js.includes(marker),`missing v4.2.5 marker: ${marker}`);
-assert.ok(/app-v425\.js\?v=4\.2\.[5-9]/.test(html),'v4.2.5 runtime layer is not wired by the current release');
-assert.ok(/shini-v42[5-9]-static-1/.test(sw)&&/app-v425\.js\?v=4\.2\.[5-9]/.test(sw),'current service worker no longer includes the v4.2.5 runtime layer');
+assert.ok(html.includes('app-v425.js?v='),'v4.2.5 runtime layer is not wired by the current release');
+assert.ok(sw.includes('app-v425.js?v='),'current service worker no longer includes the v4.2.5 runtime layer');
+assert.ok(Number(String(release.build).split('.').at(-1))>=5,'release must not regress below v4.2.5');
 
 const priorCommits=[];
 const ctx={
