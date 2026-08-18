@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const v427=fs.readFileSync(new URL('./app-v427.js',import.meta.url),'utf8');
+const js=fs.readFileSync(new URL('./app-v428.js',import.meta.url),'utf8');
+const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
+const sw=fs.readFileSync(new URL('./sw.js',import.meta.url),'utf8');
+const release=JSON.parse(fs.readFileSync(new URL('./release.json',import.meta.url),'utf8'));
+for(const m of ["VERSION='4.2.8'",'data-v42-import','Reading and validating','Selected:','Commit staged batch','document.addEventListener(\'change\'','shiniRefreshBtn','location.reload()','shiniTopLockBtn'])assert.ok(js.includes(m),`missing v4.2.8 marker: ${m}`);
+assert.ok(v427.includes("host=structured?.parentElement"),'v4.2.7 layout must retain the structured import host');
+assert.ok(v427.includes("guide.insertAdjacentElement('afterend',host)"),'v4.2.7 must move the event host, not detach .v42-bulk');
+assert.ok(html.includes('app-v428.js?v=4.2.8'),'v4.2.8 layer not wired');
+assert.ok(sw.includes("shini-v428-static-1")&&sw.includes('app-v428.js?v=4.2.8'),'v4.2.8 cache not wired');
+assert.equal(release.build,'4.2.8');
+assert.ok(release.features.includes('visible selected-file and staging feedback'));
+assert.ok(release.features.includes('persistent top-bar refresh'));
+console.log('SHINI v4.2.8 structured staging + refresh QA PASS');
