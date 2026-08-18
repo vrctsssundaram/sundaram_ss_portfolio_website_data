@@ -30,9 +30,6 @@ async function commitKind(kind){
   try{refresh()}catch{location.reload()}
 }
 
-// Capture-level delegation makes structured imports independent of where their cards are
-// positioned in the DOM. This prevents a layout/reordering layer from silently disconnecting
-// Stage CSV, Template or Commit actions from the importer.
 document.addEventListener('change',e=>{const inp=e.target.closest?.('[data-v42-import]');if(!inp)return;e.stopPropagation();stageFile(inp)},true);
 document.addEventListener('click',e=>{
   const template=e.target.closest?.('[data-v42-template]');if(template){e.preventDefault();e.stopPropagation();const k=template.dataset.v42Template;try{download(`SHINI_${k}_Template.csv`,templateSample(k))}catch{toast('Template could not be generated')}return}
@@ -53,8 +50,9 @@ function addTopControls(){
 }
 function updateAbout(){
   if(document.getElementById('pageTitle')?.textContent.trim()!=='About')return;
-  for(const card of document.querySelectorAll('.kpi-card')){if(q('.label',card)?.textContent.trim()==='SHINI release'){const v=q('.value',card);if(v)v.textContent=VERSION}}
-  for(const row of document.querySelectorAll('.metric-row')){if(row.querySelector('span')?.textContent.trim()==='Release'){const v=row.querySelector('strong');if(v)v.textContent=VERSION}}
+  const target=globalThis.SHINI_RELEASE_BUILD||VERSION;
+  for(const card of document.querySelectorAll('.kpi-card')){if(q('.label',card)?.textContent.trim()==='SHINI release'){const v=q('.value',card);if(v&&v.textContent!==target)v.textContent=target}}
+  for(const row of document.querySelectorAll('.metric-row')){if(row.querySelector('span')?.textContent.trim()==='Release'){const v=row.querySelector('strong');if(v&&v.textContent!==target)v.textContent=target}}
 }
 let pending=false;function decorate(){if(pending)return;pending=true;queueMicrotask(()=>{pending=false;addTopControls();updateAbout()})}
 const obs=new MutationObserver(decorate);obs.observe(document.documentElement,{subtree:true,childList:true});
