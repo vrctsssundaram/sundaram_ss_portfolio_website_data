@@ -1,7 +1,7 @@
 {
-  "name": "Executive OS — C/H/D-Suite Command System",
-  "short_name": "Executive OS",
-  "description": "Unified executive operating system for C-Suite, H-Suite and D-Suite leadership.",
+  "name": "VAR — Vanguard Action Registry",
+  "short_name": "VAR",
+  "description": "Private executive action and organizational command registry for C-Suite, H-Suite and D-Suite leadership.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
