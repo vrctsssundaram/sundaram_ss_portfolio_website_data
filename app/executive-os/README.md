@@ -1,37 +1,41 @@
-# Executive OS — C/H/D-Suite Command System
+# Vanguard Action Registry (VAR)
 
-Executive OS is a responsive, installable PWA for senior leadership of a fast-moving deep-tech / fabless semiconductor company. It consolidates the operating work normally scattered across project management, task trackers, spreadsheets, meeting notes, risk registers, approval workflows, dashboards, document lists, and management reporting.
+**VAR** is a private executive operating system for C-Suite, H-Suite and D-Suite leadership in fast-moving technology organizations.
 
-## v0.1 scope
+## Product purpose
 
-- Executive command centre and attention queue
-- Unified workboard for assignments, due dates, priorities and project linkage
-- Strategy, objectives, OKRs and KPI progress
-- Portfolio / project health, milestones and programme economics
-- Finance and operations executive pulse
+VAR centralizes executive actions, projects, OKRs, risks, decisions, approvals, governance obligations, meetings, stakeholders, finance/operations signals, controlled records and audit history in one organization-scoped command system.
+
+## Current staging scope
+
+- Executive command centre and unified attention queue
+- Workboard for assignments, ownership, due dates and priorities
+- Strategy, objectives, OKRs and KPIs
+- Portfolio and project health
+- Finance and operations pulse
 - Risk and issue register
-- Decision register and institutional rationale
-- Executive approval queue
-- Governance / compliance obligation tracker
-- Leadership and organization capacity view
-- Meeting calendar, agenda and follow-up task conversion
-- Strategic stakeholder tracker
-- Executive operating brief generator
-- Knowledge / controlled-record index
+- Decision register and rationale
+- Executive approvals
+- Governance and compliance obligations
+- Leadership / organization oversight
+- Meetings, agendas and follow-up actions
+- Stakeholder management
+- Reports and executive briefs
+- Knowledge / controlled records
 - Activity and audit history
-- Role-context switching for C-Suite, H-Suite and D-Suite users
-- Responsive mobile / tablet / desktop UI
-- PWA installability and offline cache
-- Local workspace persistence
-- JSON backup / restore
-- Global command search (`Cmd/Ctrl + K`)
+- C/H/D-Suite role context
+- Responsive phone / tablet / desktop PWA
 
-## Architecture choice
+## Production architecture prepared
 
-v0.1 is deliberately dependency-light: HTML + CSS + JavaScript, matching the proven static-host deployment model used by SHINI while keeping this product isolated. It can deploy directly to Hostinger or any static web host.
+The production VAR v0.2 build is a standalone static PWA backed by Supabase Auth and organization-scoped PostgreSQL Row Level Security. VAR-specific database objects are isolated from SHINI and include organizations, memberships, invitations, the unified registry, settings and audit events.
 
-The next production layer should add a dedicated backend with multi-user authentication, RBAC, row-level security, audit events, realtime updates, notifications, attachments, organization/workspace tenancy, and server-side reporting. Do **not** point this build at SHINI's finance vault tables.
+The public web shell contains no executive data and no service-role secret. Only a Supabase publishable key is used in the browser; authorization is enforced in the database.
 
-## Deployment path
+## Domain
 
-Current staging path: `/app/executive-os/` on the feature branch. Once the product name, domain and hosting target are fixed, move this folder to a dedicated repository and deploy the build at the new domain.
+Production target: `https://sundaramss.space`
+
+## Repository status
+
+This folder remains only a staging location. VAR should ultimately live in a dedicated repository and should **not** be merged as the permanent production home inside the portfolio repository.
