@@ -1,0 +1,14 @@
+{
+  "name": "VAR — Vanguard Action Registry",
+  "short_name": "VAR",
+  "description": "Private executive action and organizational command registry for C-Suite, H-Suite and D-Suite leadership.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a1220",
+  "theme_color": "#0a1220",
+  "orientation": "any",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
