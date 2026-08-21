@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1220" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Executive OS — C/H/D-Suite Command System</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="boot" class="boot">
+    <div class="boot-card">
+      <div class="brand-mark">EO</div>
+      <div class="eyebrow">ORGANIZATION COMMAND SYSTEM</div>
+      <h1>Executive OS</h1>
+      <p>C-Suite · H-Suite · D-Suite</p>
+      <div class="boot-line"><span></span></div>
+    </div>
+  </div>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark small">EO</div>
+        <div><strong>Executive OS</strong><span id="orgLabel">Organization</span></div>
+        <button id="navClose" class="icon-btn mobile-only" aria-label="Close navigation">×</button>
+      </div>
+      <nav id="nav" class="nav"></nav>
+      <div class="sidebar-foot">
+        <div class="system-pill"><span class="status-dot"></span> Local workspace ready</div>
+        <button id="backupBtn" class="ghost full">Backup workspace</button>
+      </div>
+    </aside>
+
+    <div id="backdrop" class="backdrop hidden"></div>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="top-title">
+          <div class="eyebrow" id="pageEyebrow">EXECUTIVE COMMAND CENTRE</div>
+          <h1 id="pageTitle">Command Centre</h1>
+        </div>
+        <div class="top-actions">
+          <select id="roleSelect" class="role-select" aria-label="Executive role"></select>
+          <button id="searchBtn" class="secondary">⌘ Search</button>
+          <button id="quickBtn" class="primary">+ Create</button>
+          <button id="navOpen" class="icon-btn mobile-only" aria-label="Open navigation">☰</button>
+        </div>
+      </header>
+
+      <section class="contextbar">
+        <div><strong id="todayLabel"></strong><span id="contextText">Operating picture synchronized locally</span></div>
+        <div class="context-actions">
+          <button id="exportBtn" class="text-btn">Export</button>
+          <label class="text-btn file-label">Import<input id="importInput" type="file" accept="application/json" hidden /></label>
+          <button id="resetBtn" class="text-btn danger-text">Reset demo</button>
+        </div>
+      </section>
+
+      <section id="pageRoot" class="page-root"></section>
+    </main>
+
+    <nav id="mobileDock" class="mobile-dock"></nav>
+  </div>
+
+  <dialog id="modal">
+    <form method="dialog" class="modal-shell" id="modalShell">
+      <header><div><div class="eyebrow" id="modalEyebrow">EXECUTIVE WORKFLOW</div><h2 id="modalTitle">Create</h2></div><button value="cancel" class="icon-btn">×</button></header>
+      <div id="modalBody"></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
